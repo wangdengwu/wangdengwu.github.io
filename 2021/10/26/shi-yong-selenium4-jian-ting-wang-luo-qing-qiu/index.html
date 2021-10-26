@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="使用selenium4监听网络请求, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
+    <meta name="description" content="selenium4支持devTools以往selenium更多的是用来作为UI自动化工具，因为其可以编程获取页面元素，并交互，而爬取数据往往因为页面元素的展示，和实际网络请求并不一致导致只是通过页面无法获取到精确数据。现在selenium4">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | 武码公社</title>
+    <title>使用selenium4监听网络请求 | 武码公社</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title">使用selenium4监听网络请求</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Test/">
-                                <span class="chip bg-color">Test</span>
+                            <a href="/tags/selenium/">
+                                <span class="chip bg-color">selenium</span>
                             </a>
                         
-                            <a href="/tags/First/">
-                                <span class="chip bg-color">First</span>
+                            <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
+                                <span class="chip bg-color">UI自动化</span>
                             </a>
                         
                     </div>
@@ -437,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-10-22
+                    2021-10-26
                 </div>
                 
 
@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    73
+                    961
                 </div>
                 
 
@@ -471,19 +471,45 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h3 id="selenium4支持devTools"><a href="#selenium4支持devTools" class="headerlink" title="selenium4支持devTools"></a>selenium4支持devTools</h3><p>以往selenium更多的是用来作为UI自动化工具，因为其可以编程获取页面元素，并交互，而爬取数据往往因为页面元素的展示，和实际网络请求并不一致导致只是通过页面无法获取到精确数据。<br>现在selenium4则提供了devTools交互，Chrome等浏览器自身携带了devTools，以方便开发者调试页面，比较常用的就是查看页面元素，以及查看对应的网络请求数据。<br>浏览器自带的devTools如下所示<br><img src="assets/16352486276926.jpg"></p>
+<h3 id="selenium环境搭建"><a href="#selenium环境搭建" class="headerlink" title="selenium环境搭建"></a>selenium环境搭建</h3><p>我们以Chrome为例搭建selenium环境<br>首先需要确定我们的Chrome浏览器的版本，如果你没有安装，则需要先安装Chrome浏览器，比如现在最新的Chrome浏览器版本为94.0.4606.81<br>另外下载对应版本的chromedriver,<a target="_blank" rel="noopener" href="http://npm.taobao.org/mirrors/chromedriver/">下载地址(taobao镜像)</a> 选择和Chrome版本一致的文件夹，并下载和自己操作系统一致的文件。<br>下载完成后，需要把chromedriver放到系统可执行路径下，比如Linux或Mac可以放到/usr/local/bin/<br>然后通过命令行启动Chrome，对于Windows可以在桌面Chrome应用的快捷方式添加启动参数。启动命令如下</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./Google<span class="token punctuation">\</span> Chrome --remote-debugging-port<span class="token operator">=</span><span class="token number">9222</span> --user-data-dir<span class="token operator">=</span><span class="token string">"/Users/xxxx/chrome2"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中最主要的2个参数是–remote-debugging-port和–user-data-dir</p>
+<h3 id="程序调用"><a href="#程序调用" class="headerlink" title="程序调用"></a>程序调用</h3><p>当我们启动好Chrome之后，就可以通过代码的方式来进行交互了。<br>这里我使用Java语言来展示关键代码，对应pom里需要使用最新的selenium依赖</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>org<span class="token punctuation">.</span>seleniumhq<span class="token punctuation">.</span>selenium<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>selenium<span class="token operator">-</span>java<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>version<span class="token punctuation">></span></span><span class="token number">4.0</span><span class="token number">.0</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h4 id="配置启动参数"><a href="#配置启动参数" class="headerlink" title="配置启动参数"></a>配置启动参数</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ChromeOptions</span> chromeOptions <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ChromeOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+chromeOptions<span class="token punctuation">.</span><span class="token function">setExperimentalOption</span><span class="token punctuation">(</span><span class="token string">"debuggerAddress"</span><span class="token punctuation">,</span> <span class="token string">"127.0.0.1:9222"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">WebDriver</span> driver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ChromeDriver</span><span class="token punctuation">(</span>chromeOptions<span class="token punctuation">)</span><span class="token punctuation">;</span>
+driver<span class="token punctuation">.</span><span class="token function">manage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">timeouts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">implicitlyWait</span><span class="token punctuation">(</span><span class="token class-name">Duration</span><span class="token punctuation">.</span><span class="token function">ofSeconds</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span>driver <span class="token operator">=</span> driver<span class="token punctuation">;</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span>devTools <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ChromeDriver</span><span class="token punctuation">)</span> driver<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getDevTools</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+devTools<span class="token punctuation">.</span><span class="token function">createSession</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+devTools<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token class-name">Network</span><span class="token punctuation">.</span><span class="token function">enable</span><span class="token punctuation">(</span><span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里初始化driver的时候，参数里的port一定要和启动Chrome时配置的port对应上。<br>而devTools则可以通过ChromeDriver直接获取到，devTools有很多api，而我们只演示监听网络数据的功能。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">devTools<span class="token punctuation">.</span><span class="token function">addListener</span><span class="token punctuation">(</span><span class="token class-name">Network</span><span class="token punctuation">.</span><span class="token function">responseReceived</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>responseReceived <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+           <span class="token class-name">RequestId</span> requestId <span class="token operator">=</span> responseReceived<span class="token punctuation">.</span><span class="token function">getRequestId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           <span class="token class-name">Network<span class="token punctuation">.</span>GetResponseBodyResponse</span> response <span class="token operator">=</span> devTools<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token class-name">Network</span><span class="token punctuation">.</span><span class="token function">getResponseBody</span><span class="token punctuation">(</span>requestId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           <span class="token class-name">String</span> body <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>devTools是通过事件监听来获取网络数据的，具体监听事件有很多，比如responseReceived，requestWillBeSent，dataReceived等等。<br>需要注意的有几点：</p>
+<ol>
+<li>获取response的时候，记得try catch，以防止有的请求并没有body导致的异常。</li>
+<li>responseReceived事件触发时，这个时候获取response未必能取到，因为只是响应返回了，但是body可能比较大，数据可能还没有接收完。</li>
+<li>dataReceived事件触发时，大概率是可以获取到返回的body的，但是保险起见，可以sleep500毫秒。</li>
+<li>如果有一些请求，请求的URL都一样，只是参数不同，而我们只关心特定参数的request返回的response，则可以订阅requestWillBeSent事件，确认该请求是需要的，则把RequestId扔到队列里，在dataReceived的时候从队列里取出RequestId来获取返回数据。</li>
+<li>requestWillBeSent的RequestId和dataReceived的RequestId内容是一样的。</li>
+</ol>
+<p>除了通过devTools监听数据外，还可以做很多其它的事情，比如修改请求HEAD，修改Cookie，具体API可以去<a target="_blank" rel="noopener" href="https://www.selenium.dev/documentation/webdriver/bidi_apis/">官网</a>查询。</p>
+<p>当然有了driver一样可以像以前一样，访问URL，获取页面元素，交互。比如如下代码</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">driver<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>login<span class="token punctuation">)</span><span class="token punctuation">;</span>
+driver<span class="token punctuation">.</span><span class="token function">findElement</span><span class="token punctuation">(</span><span class="token class-name">By</span><span class="token punctuation">.</span><span class="token function">xpath</span><span class="token punctuation">(</span><span class="token string">"//*[@id=\"root\"]/div/section/header/div[1]/div/div/div/div[2]/span"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+driver<span class="token punctuation">.</span><span class="token function">findElement</span><span class="token punctuation">(</span><span class="token class-name">By</span><span class="token punctuation">.</span><span class="token function">className</span><span class="token punctuation">(</span><span class="token string">"semi-button-content"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>有了devTools监听网络数据，更方便爬取一些数据，尤其是需要授权登录的情况，我们可以事先登录或者远程登录的方式，来获取一些我们想要的数据。<br>以上就是对selenium4新功能devTools的介绍。</p>
 
                 
             </div>
@@ -510,7 +536,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://wdw.pub/2021/10/22/hello-world/">https://wdw.pub/2021/10/22/hello-world/</a>
+                    <a href="https://wdw.pub/2021/10/26/shi-yong-selenium4-jian-ting-wang-luo-qing-qiu/">https://wdw.pub/2021/10/26/shi-yong-selenium4-jian-ting-wang-luo-qing-qiu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -548,12 +574,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Test/">
-                                    <span class="chip bg-color">Test</span>
+                                <a href="/tags/selenium/">
+                                    <span class="chip bg-color">selenium</span>
                                 </a>
                             
-                                <a href="/tags/First/">
-                                    <span class="chip bg-color">First</span>
+                                <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
+                                    <span class="chip bg-color">UI自动化</span>
                                 </a>
                             
                         </div>
@@ -741,13 +767,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/10/26/shi-yong-selenium4-jian-ting-wang-luo-qing-qiu/">
+                <a href="/2021/10/26/ling-yu-qu-dong-she-ji-jian-jie/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="使用selenium4监听网络请求">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="领域驱动设计简介">
                         
-                        <span class="card-title">使用selenium4监听网络请求</span>
+                        <span class="card-title">领域驱动设计简介</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -764,8 +790,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B5%8B%E8%AF%95/" class="post-category">
-                                    测试
+                            <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="post-category">
+                                    程序设计
                                 </a>
                             
                             
@@ -775,12 +801,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/selenium/">
-                        <span class="chip bg-color">selenium</span>
+                    <a href="/tags/DDD/">
+                        <span class="chip bg-color">DDD</span>
                     </a>
                     
-                    <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
-                        <span class="chip bg-color">UI自动化</span>
+                    <a href="/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/">
+                        <span class="chip bg-color">领域驱动</span>
                     </a>
                     
                 </div>
@@ -791,7 +817,7 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/2021/10/22/hello-world/">
@@ -825,7 +851,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
