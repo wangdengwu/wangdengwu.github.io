@@ -11,7 +11,9 @@ tags:
 以往selenium更多的是用来作为UI自动化工具，因为其可以编程获取页面元素，并交互，而爬取数据往往因为页面元素的展示，和实际网络请求并不一致导致只是通过页面无法获取到精确数据。
 现在selenium4则提供了devTools交互，Chrome等浏览器自身携带了devTools，以方便开发者调试页面，比较常用的就是查看页面元素，以及查看对应的网络请求数据。
 浏览器自带的devTools如下所示
-![](assets/16352486276926.jpg)
+
+![](https://cdn.jsdelivr.net/gh/wangdengwu/wangdengwu.github.io/source/_posts/assets/16352486276926.jpg)
+
 ### selenium环境搭建
 我们以Chrome为例搭建selenium环境
 首先需要确定我们的Chrome浏览器的版本，如果你没有安装，则需要先安装Chrome浏览器，比如现在最新的Chrome浏览器版本为94.0.4606.81
