@@ -4,9 +4,12 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Docker简介, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
-    <meta name="description" content="docker简介docker是一种虚拟化技术，但是和虚拟机又不一样，比较轻量级，最大的好处就是隔离底层硬件和软件的区别，然后让软件跑在统一的环境下，而减少因为底层软硬件环境的问题，导致的软件出错和不一致性。
-docker使用容器这一概念来实">
+    <meta name="keywords" content="Vue3 新特性, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
+    <meta name="description" content="vue2的历史问题为什么需要有Vue3？有人开玩笑式的抱怨
+
+别再升级了，老子学不动了
+
+框架升级一定是有原因的，是为了解决问题或者带来新特性，否则不会跨大版本不兼容升级。为什么vue要有vue3呢，先来看看vue2框架结构和一些历史遗留问">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +21,7 @@ docker使用容器这一概念来实">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Docker简介 | 武码公社</title>
+    <title>Vue3 新特性 | 武码公社</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -288,12 +291,12 @@ docker使用容器这一概念来实">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Docker简介</h1>
+                    <h1 class="description center-align post-title">Vue3 新特性</h1>
                 </div>
             </div>
         </div>
@@ -409,8 +412,8 @@ docker使用容器这一概念来实">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/docker/">
-                                <span class="chip bg-color">docker</span>
+                            <a href="/tags/vue3/">
+                                <span class="chip bg-color">vue3</span>
                             </a>
                         
                     </div>
@@ -421,8 +424,8 @@ docker使用容器这一概念来实">
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/docker/" class="post-category">
-                                docker
+                            <a href="/categories/vue/" class="post-category">
+                                vue
                             </a>
                         
                     </div>
@@ -434,7 +437,7 @@ docker使用容器这一概念来实">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-11-01
+                    2021-11-02
                 </div>
                 
 
@@ -443,7 +446,7 @@ docker使用容器这一概念来实">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1k
+                    815
                 </div>
                 
 
@@ -473,24 +476,66 @@ docker使用容器这一概念来实">
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><p>docker是一种虚拟化技术，但是和虚拟机又不一样，比较轻量级，最大的好处就是隔离底层硬件和软件的区别，然后让软件跑在统一的环境下，而减少因为底层软硬件环境的问题，导致的软件出错和不一致性。</p>
-<p>docker使用容器这一概念来实现，在一台机器上可以运行多个隔离的容器，每个容器内包含运行所需的所有内容，包括操作系统和底层依赖，例如：容器包括centos7的操作系统，并且含有jdk1.8的底层依赖，然后就可以分享容器，其他人只需要获取到容器，就可以直接运行你的代码，而且所有人的环境都是一样的。</p>
-<p>我们可以用docker来快速分享开发环境，也可以用于生产环境快速扩容，因为环境都是一致的，并且docker获取和运行容器非常快速。而我主要使用docker来隔离本地环境，不想因为尝试某种技术，而污染本地的开发环境，又可以快速分享这种演示环境。后续如果可以使用docker来分发开发环境，我将使用docker，除非是docker无法支持的环境，如Mac特有的xcode打包等，不过目前看这种极特殊的情况很少发生。</p>
-<h2 id="docker架构"><a href="#docker架构" class="headerlink" title="docker架构"></a>docker架构</h2><p><img src="https://docs.docker.com/engine/images/architecture.svg"><br>docker采用的是client-server架构，client（docker）和daemon（dockerd）通讯，client和daemon可以是在同一台机器上，也可以远程访问另外一台机器的daemon，其通讯采用的是rest-api方式。<br>daemon主要负责监听API请求，并管理镜像，容器，网络，存储等。<br>client则比较轻量一点，主要负责发送命令，比如docker run等<br>另外镜像还可以被注册和分享，通过Docker Hub可以找到很多公共镜像，从而达到快速构建容器的目的。</p>
-<h2 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h2><p>镜像是创建容器所需的指令模板，只读，通常一个镜像可能基于另外一个镜像，做一些自己的增强，比如基于Ubuntu的系统镜像，做一些安装和配置Nginx的指令。我们可以使用Dockerfile来定义这些步骤命令，通过这个文件就可以build出镜像文件，并且分享。</p>
-<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><p>容器就是运行镜像的实例，你可以create，start，stop，move，delete镜像，你可以远程链接到该镜像，给它分配存储，甚至创建一个新的镜像基于容器当前的状态。容器彼此之间都是隔离的。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">docker run -i -t ubuntu /bin/bash<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>当你在命令行敲了上面的代码，执行过程如下：</p>
+                <h2 id="vue2的历史问题"><a href="#vue2的历史问题" class="headerlink" title="vue2的历史问题"></a>vue2的历史问题</h2><p>为什么需要有Vue3？有人开玩笑式的抱怨</p>
+<blockquote>
+<p>别再升级了，老子学不动了</p>
+</blockquote>
+<p>框架升级一定是有原因的，是为了解决问题或者带来新特性，否则不会跨大版本不兼容升级。<br>为什么vue要有vue3呢，先来看看vue2框架结构和一些历史遗留问题。<br>vue2由几大块组成：组件，响应式，虚拟DOM，运行时，浏览器耦合模块。但是由于历史原因，其有以下几个缺点：</p>
 <ol>
-<li>如果你本地没有Ubuntu的镜像，则向注册中心请求该镜像文件，就像你手动执行了<code>docker pull ubuntu</code>一样。</li>
-<li>创建新的容器，就像你手动执行<code>docker container create</code>一样。</li>
-<li>分配可读写文件给容器，作为它的最后一层，这样允许容器被可控的修改，阻止了对于镜像其它可能的修改，即安全又便捷。</li>
-<li>创建默认的网络接口，如果你没有自定义的话，将分配本地IP给容器，并且默认具有通过本地机器访问外部网络的能力。</li>
-<li>容器启动，并且执行<code>/bin/bash</code>,可以和容器进行交互，因为使用了-i和-t的选项。</li>
-<li>当你使用exit退出时，容器将停止，但是没有被删除，你还可以start或者remove。</li>
+<li>vue2是基于Flow.js来做类型校验的，但是现在Flow.js已经停止维护。</li>
+<li>vue2的运行时耦合浏览器操作，这会带来如果需要适配小程序，则要改vue核心代码才行。</li>
+<li>vue2的响应式，也不是真正意义上的proxy，而是为了兼容IE使用了Object.defineProperty()，有很大的性能问题。</li>
+<li>对应代码较多的组件，data,methods导致数据和方法隔离，当行数比较多时，需要来回查看，不利于维护。</li>
 </ol>
-<h2 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h2><p>我们安装docker桌面版，因为有图形化界面，可以更直观<br>安装地址为<a target="_blank" rel="noopener" href="https://docs.docker.com/desktop/">docker桌面版</a>,选择自己对应的操作系统，比如Windows还是Mac<br>具体安装步骤就不详细说明了，Windows需要注意开启主板的虚拟设置，Mac需要选择Intel芯片还是M1芯片的安装文件。<br>安装完界面如下：<img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211101164658.png"></p>
-<p>后续一些需要分享开发环境的，都将采用docker的镜像分享，以方便快速统一环境。</p>
+<h2 id="vue3的新特性"><a href="#vue3的新特性" class="headerlink" title="vue3的新特性"></a>vue3的新特性</h2><h5 id="响应式系统，使用了Proxy来实现，所以vue3不再兼容IE11以下浏览器。"><a href="#响应式系统，使用了Proxy来实现，所以vue3不再兼容IE11以下浏览器。" class="headerlink" title="响应式系统，使用了Proxy来实现，所以vue3不再兼容IE11以下浏览器。"></a>响应式系统，使用了Proxy来实现，所以vue3不再兼容IE11以下浏览器。</h5><h5 id="自定义渲染器，将浏览器相关渲染独立出来，这样只需要增加对小程序渲染的模块，就增加了对小程序的支持。"><a href="#自定义渲染器，将浏览器相关渲染独立出来，这样只需要增加对小程序渲染的模块，就增加了对小程序的支持。" class="headerlink" title="自定义渲染器，将浏览器相关渲染独立出来，这样只需要增加对小程序渲染的模块，就增加了对小程序的支持。"></a>自定义渲染器，将浏览器相关渲染独立出来，这样只需要增加对小程序渲染的模块，就增加了对小程序的支持。</h5><h5 id="使用TypeScript重构，增强了类型安全。"><a href="#使用TypeScript重构，增强了类型安全。" class="headerlink" title="使用TypeScript重构，增强了类型安全。"></a>使用TypeScript重构，增强了类型安全。</h5><h5 id="Composition-API-组合语法，解决数据定义和方法分开导致的注意力打断，复杂逻辑的代码行数很多的情况下，便于维护。"><a href="#Composition-API-组合语法，解决数据定义和方法分开导致的注意力打断，复杂逻辑的代码行数很多的情况下，便于维护。" class="headerlink" title="Composition API 组合语法，解决数据定义和方法分开导致的注意力打断，复杂逻辑的代码行数很多的情况下，便于维护。"></a>Composition API 组合语法，解决数据定义和方法分开导致的注意力打断，复杂逻辑的代码行数很多的情况下，便于维护。</h5><h6 id="vue2写法"><a href="#vue2写法" class="headerlink" title="vue2写法"></a>vue2写法</h6><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> App <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+      count<span class="token operator">:</span> <span class="token number">1</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  methods<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>count<span class="token operator">++</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  computed<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">double</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>count <span class="token operator">*</span> <span class="token number">2</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+Vue<span class="token punctuation">.</span><span class="token function">createApp</span><span class="token punctuation">(</span>App<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mount</span><span class="token punctuation">(</span><span class="token string">'#app'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h6 id="vue3写法"><a href="#vue3写法" class="headerlink" title="vue3写法"></a>vue3写法</h6><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token punctuation">&#123;</span> reactive<span class="token punctuation">,</span> computed <span class="token punctuation">&#125;</span> <span class="token operator">=</span> Vue
+<span class="token keyword">let</span> App <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">setup</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> state <span class="token operator">=</span> <span class="token function">reactive</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+      count<span class="token operator">:</span> <span class="token number">1</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token keyword">function</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      state<span class="token punctuation">.</span>count<span class="token operator">++</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">const</span> double <span class="token operator">=</span> <span class="token function">computed</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> state<span class="token punctuation">.</span>count <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token punctuation">&#123;</span> state<span class="token punctuation">,</span> add<span class="token punctuation">,</span> double <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+Vue<span class="token punctuation">.</span><span class="token function">createApp</span><span class="token punctuation">(</span>App<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mount</span><span class="token punctuation">(</span><span class="token string">'#app'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="Vue-3-还内置了-Fragment、Teleport-和-Suspense-三个新组件"><a href="#Vue-3-还内置了-Fragment、Teleport-和-Suspense-三个新组件" class="headerlink" title="Vue 3 还内置了 Fragment、Teleport 和 Suspense 三个新组件"></a>Vue 3 还内置了 Fragment、Teleport 和 Suspense 三个新组件</h5><ul>
+<li> Fragment: Vue 3 组件不再要求有一个唯一的根节点，清除了很多无用的占位 div。</li>
+<li> Teleport: 允许组件渲染在别的元素内，主要开发弹窗组件的时候特别有用。</li>
+<li> Suspense: 异步组件，更方便开发有异步请求的组件。</li>
+</ul>
+<h5 id="新一代工程化工具-Vite"><a href="#新一代工程化工具-Vite" class="headerlink" title="新一代工程化工具 Vite"></a>新一代工程化工具 Vite</h5><p>Webpack采用预编译的方式，往往由于工程文件很多，导致打包时间要到分钟级别，严重影响开发体验，而Vite采用按需加载，可以大大缩短启动时间，开发期间几乎秒启动，按需加载。</p>
+<h2 id="vue2要不要升级vue3"><a href="#vue2要不要升级vue3" class="headerlink" title="vue2要不要升级vue3"></a>vue2要不要升级vue3</h2><p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211102164915.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>工程化工具 Vite 带来了更丝滑的调试体验。</li>
+<li>对于产品的最终效果来看，Vue 3 性能更高，体积更小。</li>
+<li>对于普通开发者来说，Composition API 组合语法带来了更好的组织代码的形式。</li>
+<li>全新的响应式系统基于 Proxy，也可以独立使用。</li>
+<li>Vue 3 内置了新的 Fragment、Teleport 和 Suspense 等组件。</li>
+<li>对于 Vue 的二次开发来说，自定义渲染器让我们开发跨端应用时更加得心应手。</li>
+<li>对于 Vue 的源码维护者，全部的模块使用 TypeScript 重构，能够带来更好的可维护性。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211102163240.png"></li>
+</ul>
 
                 
             </div>
@@ -517,7 +562,7 @@ docker使用容器这一概念来实">
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://wdw.pub/2021/11/01/docker-jian-jie/">https://wdw.pub/2021/11/01/docker-jian-jie/</a>
+                    <a href="https://wdw.pub/2021/11/02/vue3-xin-te-xing/">https://wdw.pub/2021/11/02/vue3-xin-te-xing/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -555,8 +600,8 @@ docker使用容器这一概念来实">
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/docker/">
-                                    <span class="chip bg-color">docker</span>
+                                <a href="/tags/vue3/">
+                                    <span class="chip bg-color">vue3</span>
                                 </a>
                             
                         </div>
@@ -740,9 +785,10 @@ docker使用容器这一概念来实">
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/11/02/vue3-xin-te-xing/">
                     <div class="card-image">
@@ -760,9 +806,9 @@ docker使用容器这一概念来实">
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-02
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-02
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -775,6 +821,7 @@ docker使用容器这一概念来实">
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -793,13 +840,13 @@ docker使用容器这一概念来实">
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/10/26/shi-xian-nei-wang-kai-fa-diao-shi/">
+                <a href="/2021/11/01/docker-jian-jie/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="自定义Spring Gateway负载均衡策略实现内网开发调试">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Docker简介">
                         
-                        <span class="card-title">自定义Spring Gateway负载均衡策略实现内网开发调试</span>
+                        <span class="card-title">Docker简介</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -810,14 +857,14 @@ docker使用容器这一概念来实">
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-01
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Java/" class="post-category">
-                                    Java
+                            <a href="/categories/docker/" class="post-category">
+                                    docker
                                 </a>
                             
                             
@@ -827,12 +874,8 @@ docker使用容器这一概念来实">
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/spring-gateway/">
-                        <span class="chip bg-color">spring gateway</span>
-                    </a>
-                    
-                    <a href="/tags/Java/">
-                        <span class="chip bg-color">Java</span>
+                    <a href="/tags/docker/">
+                        <span class="chip bg-color">docker</span>
                     </a>
                     
                 </div>
