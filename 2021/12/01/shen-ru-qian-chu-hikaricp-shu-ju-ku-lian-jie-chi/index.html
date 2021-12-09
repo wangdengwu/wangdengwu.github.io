@@ -1,0 +1,1792 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="深入浅出HikariCP数据库连接池, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
+    <meta name="description" content="HikariCP简介HikariCP数据库连接池是spring boot的默认数据库连接池，看名字我以为是日本人写的，后来才知道是一个常年居住在东京的美国人写的，spring默认把hikari作为数据库连接池的原因也很简单，因为它足够快，代">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>深入浅出HikariCP数据库连接池 | 武码公社</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">武码公社</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">武码公社</div>
+        <div class="logo-desc">
+            
+            思考和积累
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/wangdengwu" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>我的代码库
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/wangdengwu" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="我的代码库" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">深入浅出HikariCP数据库连接池</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/HikariCP/">
+                                <span class="chip bg-color">HikariCP</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/">
+                                <span class="chip bg-color">数据库连接池</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Java/" class="post-category">
+                                Java
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-12-01
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5.3k
+                </div>
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h3 id="HikariCP简介"><a href="#HikariCP简介" class="headerlink" title="HikariCP简介"></a>HikariCP简介</h3><p>HikariCP数据库连接池是spring boot的默认数据库连接池，看名字我以为是日本人写的，后来才知道是一个常年居住在东京的美国人写的，spring默认把hikari作为数据库连接池的原因也很简单，因为它足够快，代码量少，稳定，虽然功能不及Druid，但是对于监控也有一定的扩展性，简单，快速，稳定是其胜出的原因。目前支持JDK8的最新版本是4.0.3，在GitHub开源，<a target="_blank" rel="noopener" href="https://github.com/brettwooldridge/HikariCP">项目地址</a></p>
+<h3 id="不使用数据库连接池"><a href="#不使用数据库连接池" class="headerlink" title="不使用数据库连接池"></a>不使用数据库连接池</h3><p>现在由于spring的普及，以及spring boot的集成便利性，无论是使用JPA还是MyBatis，底层ORM已经非常成熟，即便是基于学习也很少有人手动建立数据库连接，并执行SQL了，如果不使用数据库连接池，完全手动连接数据库，并执行SQL应该怎么做呢，让我们回到刀耕火种的时代，再怀旧一下。</p>
+<pre class="line-numbers language-kotlin" data-language="kotlin"><code class="language-kotlin">spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>driverClassName<span class="token operator">=</span>com<span class="token punctuation">.</span>mysql<span class="token punctuation">.</span>cj<span class="token punctuation">.</span>jdbc<span class="token punctuation">.</span>Driver
+spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>url<span class="token operator">=</span>jdbc<span class="token operator">:</span>mysql<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token operator">:</span><span class="token number">3306</span><span class="token operator">/</span>mysql
+spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>username<span class="token operator">=</span>root
+spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>password<span class="token operator">=</span><span class="token number">123456</span>
+
+<span class="token keyword">interface</span> HikariDao <span class="token punctuation">&#123;</span>
+    <span class="token keyword">fun</span> <span class="token function">useHikari</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String
+    <span class="token keyword">fun</span> <span class="token function">useJdbc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">package</span> <span class="token keyword">data</span><span class="token punctuation">.</span>source<span class="token punctuation">.</span>hikari<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>dao
+
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Autowired
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Value
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>jdbc<span class="token punctuation">.</span>core<span class="token punctuation">.</span>JdbcTemplate
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>jdbc<span class="token punctuation">.</span>core<span class="token punctuation">.</span>ResultSetExtractor
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>stereotype<span class="token punctuation">.</span>Service
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DriverManager
+
+<span class="token annotation builtin">@Service</span>
+<span class="token keyword">class</span> <span class="token function">HikariDaoImpl</span><span class="token punctuation">(</span>
+    <span class="token annotation builtin">@Autowired</span> <span class="token keyword">private</span> <span class="token keyword">val</span> jdbcTemplate<span class="token operator">:</span> JdbcTemplate<span class="token punctuation">,</span>
+    <span class="token annotation builtin">@Value</span><span class="token punctuation">(</span><span class="token string">"\<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>url<span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span> <span class="token keyword">private</span> <span class="token keyword">val</span> jdbcUrl<span class="token operator">:</span> String<span class="token punctuation">,</span>
+    <span class="token annotation builtin">@Value</span><span class="token punctuation">(</span><span class="token string">"\<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>username<span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span> <span class="token keyword">private</span> <span class="token keyword">val</span> userName<span class="token operator">:</span> String<span class="token punctuation">,</span>
+    <span class="token annotation builtin">@Value</span><span class="token punctuation">(</span><span class="token string">"\<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>password<span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span> <span class="token keyword">private</span> <span class="token keyword">val</span> password<span class="token operator">:</span> String<span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token operator">:</span> HikariDao <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">companion</span> <span class="token keyword">object</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">private</span> <span class="token keyword">const</span> <span class="token keyword">val</span> ALIAS <span class="token operator">=</span> <span class="token string">"time"</span>
+        <span class="token keyword">private</span> <span class="token keyword">const</span> <span class="token keyword">val</span> SQL <span class="token operator">=</span> <span class="token string">"select now() as <span class="token interpolation variable">$ALIAS</span>"</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">useHikari</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> jdbcTemplate<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>SQL<span class="token punctuation">,</span> ResultSetExtractor <span class="token punctuation">&#123;</span>
+            it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span><span class="token label symbol">@ResultSetExtractor</span> it<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>ALIAS<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token operator">!!</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">useJdbc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String <span class="token punctuation">&#123;</span>
+        <span class="token keyword">val</span> connection <span class="token operator">=</span> DriverManager<span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span>jdbcUrl<span class="token punctuation">,</span> userName<span class="token punctuation">,</span> password<span class="token punctuation">)</span>
+        connection<span class="token punctuation">.</span><span class="token function">use</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">val</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            statement<span class="token punctuation">.</span><span class="token function">use</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">val</span> result <span class="token operator">=</span> statement<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span>SQL<span class="token punctuation">)</span>
+                result<span class="token punctuation">.</span><span class="token function">use</span> <span class="token punctuation">&#123;</span>
+                    it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                    <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>ALIAS<span class="token punctuation">)</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>直接操作jdbc，需要通过DriverManager获取数据库连接，然后通过Statement执行SQL，拿到ResultSet，手动getXXX获取数据并组装成对象，这里使用了kotlin的use来自动close，通过示例可以看到如果手动操作，非常繁琐，需要关心很多和业务无关的操作，而spring jdbc以及ORM框架则把这些繁琐的操作都封装了起来，使我们只需要关注具体的SQL和对象。<br>这里还有一个小知识点，就是SPI，在JDBC4.0之前，需要使用<code>Class.forName(driverClassName)</code>来加载驱动，而JDBC4.0之后只需要厂商在驱动包里配置一下即可<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211201182322.png"><br>原理是通过<code>val loader = ServiceLoader.load(Driver::class.java)</code>即可加载到实现。</p>
+<h3 id="为什么需要数据库连接池"><a href="#为什么需要数据库连接池" class="headerlink" title="为什么需要数据库连接池"></a>为什么需要数据库连接池</h3><p>数据库连接是TCP连接，需要经过TCP的三次握手，如果每次访问数据库都需要建立连接，则会导致每次获取数据都需要等待连接，将会大大降低数据获取的响应时间，而数据库连接池则是将数据库连接缓存起来，保持TCP连接不断，在需要的时候，直接从连接池里获取，不需要等待即可执行SQL获取到数据<br>除了降低响应时间之外，数据库连接池还可以设定数据库连接数量，因为数据库连接是宝贵资源，当某一个服务并发比较高，并且SQL执行比较慢的时候，会导致建立大量的数据库连接，这往往会对数据库造成致命的影响，导致数据库连接占满而不可用，其它正常的服务也将不可用。<br>另外TCP连接频繁建立断开，由于TCP断开的4次握手，会导致大量的TIME_WAIT状态问题，这也将会影响数据库的性能。</p>
+<h3 id="数据库连接池原理"><a href="#数据库连接池原理" class="headerlink" title="数据库连接池原理"></a>数据库连接池原理</h3><p>在系统初始化的时候，在内存中开辟一片空间，将一定数量的数据库连接作为对象存储在对象池里，并对外提供数据库连接的获取和归还方法。用户访问数据库时，并不是建立一个新的连接，而是从数据库连接池中取出一个已有的空闲连接对象；使用完毕归还后的连接也不会马上被关闭，而是由数据库连接池统一管理回收，为下一次借用做好准备。如果由于高并发请求导致数据库连接池中的连接被借用完毕，其他线程就会等待，直到有连接被归还。整个过程中，连接并不会被关闭，而是源源不断地循环使用，有借有还。数据库连接池还可以通过设置其参数来控制连接池中的初始连接数、连接的上下限数，以及每个连接的最大使用次数、最大空闲时间等，也可以通过其自身的管理机制来监视数据库连接的数量、使用情况等。</p>
+<h3 id="数据库连接池组成"><a href="#数据库连接池组成" class="headerlink" title="数据库连接池组成"></a>数据库连接池组成</h3><p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0.jpg"></p>
+<h3 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h3><p>由于spring boot 2.x开始数据库连接池已经默认是HikariCP了，所以我们只需要进行配置即可，那都有哪些配置项需要配置呢，又有哪些需要注意的地方呢？</p>
+<h4 id="默认是怎么生效的"><a href="#默认是怎么生效的" class="headerlink" title="默认是怎么生效的"></a>默认是怎么生效的</h4><p>我们先来看下，spring boot 2.6.1是怎么默认使用HikariCP为数据库连接池的。</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-jdbc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>只要在pom.xml引入starter-jdbc，则默认就引入了HikariCP数据库连接池，我们看下spring-boot-starter-jdbc的pom.xml</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.6.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">></span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.zaxxer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>HikariCP<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>4.0.3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">></span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-jdbc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>5.3.13<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">></span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到jdbc依赖了HikariCP，并且版本是4.0.3最新版本。了解spring boot starter机制的应该知道，除了pom依赖，还需要有autoconfig<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211202154126.png"></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+	<span class="token annotation punctuation">@ConditionalOnClass</span><span class="token punctuation">(</span><span class="token class-name">HikariDataSource</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+	<span class="token annotation punctuation">@ConditionalOnMissingBean</span><span class="token punctuation">(</span><span class="token class-name">DataSource</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+	<span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"spring.datasource.type"</span><span class="token punctuation">,</span> havingValue <span class="token operator">=</span> <span class="token string">"com.zaxxer.hikari.HikariDataSource"</span><span class="token punctuation">,</span>
+			matchIfMissing <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+	<span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Hikari</span> <span class="token punctuation">&#123;</span>
+
+		<span class="token annotation punctuation">@Bean</span>
+		<span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.datasource.hikari"</span><span class="token punctuation">)</span>
+		<span class="token class-name">HikariDataSource</span> <span class="token function">dataSource</span><span class="token punctuation">(</span><span class="token class-name">DataSourceProperties</span> properties<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			<span class="token class-name">HikariDataSource</span> dataSource <span class="token operator">=</span> <span class="token function">createDataSource</span><span class="token punctuation">(</span>properties<span class="token punctuation">,</span> <span class="token class-name">HikariDataSource</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">hasText</span><span class="token punctuation">(</span>properties<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+				dataSource<span class="token punctuation">.</span><span class="token function">setPoolName</span><span class="token punctuation">(</span>properties<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token punctuation">&#125;</span>
+			<span class="token keyword">return</span> dataSource<span class="token punctuation">;</span>
+		<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样就默认初始化了HikariDataSource。<br>让我们再接着看下配置项。除了配置数据库必填的4个之外，常用配置还有另外几个。</p>
+<pre class="line-numbers language-none"><code class="language-none">spring.datasource.driverClassName&#x3D;com.mysql.cj.jdbc.Driver
+spring.datasource.url&#x3D;jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;mysql
+spring.datasource.username&#x3D;root
+spring.datasource.password&#x3D;123456
+#默认true
+spring.datasource.hikari.autoCommit&#x3D;true
+#等待超时时间，默认30秒
+spring.datasource.hikari.connectionTimeOut&#x3D;30000
+#最长多久空闲即释放，默认10分钟
+spring.datasource.hikari.idleTimeout&#x3D;600000
+#连接最长存活时间毫秒，默认30分钟
+spring.datasource.hikari.maxLifetime&#x3D;1800000
+#最大连接池数量，默认10
+spring.datasource.hikari.maximumPoolSize&#x3D;10
+#默认和max相同
+spring.datasource.hikari.minimumIdle&#x3D;10
+#连接池名称，如果多个微服务，建议配置不同名字
+spring.datasource.hikari.poolName&#x3D;hikari
+#开启JMX
+spring.datasource.hikari.registerMbeans&#x3D;true
+
+#监控相关
+#spring.datasource.hikari.metricRegistry&#x3D;
+#健康信息
+#spring.datasource.hikari.healthCheckRegistry&#x3D;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="配置项注意点"><a href="#配置项注意点" class="headerlink" title="配置项注意点"></a>配置项注意点</h4><p>大部分应用使用默认值即可很好的工作，需要注意的是连接池数量不是越多越好，而是如何尽量少越好。<br>我们先验证一下超时时间是否生效，为了方便测试，我们打开JMX以及将minimumIdle和maximumPoolSize改为1，然后执行慢查询，占用唯一的链接，再执行正常查询，等待，看看是否30秒会超时。</p>
+<pre class="line-numbers language-kotlin" data-language="kotlin"><code class="language-kotlin"><span class="token annotation builtin">@RestController</span>
+<span class="token keyword">class</span> <span class="token function">HikariController</span><span class="token punctuation">(</span><span class="token annotation builtin">@Autowired</span> <span class="token keyword">private</span> <span class="token keyword">val</span> hikariDao<span class="token operator">:</span> HikariDao<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation builtin">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/hikari"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">hikari</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> hikariDao<span class="token punctuation">.</span><span class="token function">useHikari</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation builtin">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/slow"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">slow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Int <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> hikariDao<span class="token punctuation">.</span><span class="token function">slowSql</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">interface</span> HikariDao <span class="token punctuation">&#123;</span>
+    <span class="token keyword">fun</span> <span class="token function">useHikari</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String
+    <span class="token keyword">fun</span> <span class="token function">useJdbc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String
+    <span class="token keyword">fun</span> <span class="token function">slowSql</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Int
+<span class="token punctuation">&#125;</span>
+
+<span class="token annotation builtin">@Service</span>
+<span class="token keyword">class</span> <span class="token function">HikariDaoImpl</span><span class="token punctuation">(</span>
+    <span class="token annotation builtin">@Autowired</span> <span class="token keyword">private</span> <span class="token keyword">val</span> jdbcTemplate<span class="token operator">:</span> JdbcTemplate<span class="token punctuation">,</span>
+    <span class="token annotation builtin">@Value</span><span class="token punctuation">(</span><span class="token string">"\<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>url<span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span> <span class="token keyword">private</span> <span class="token keyword">val</span> jdbcUrl<span class="token operator">:</span> String<span class="token punctuation">,</span>
+    <span class="token annotation builtin">@Value</span><span class="token punctuation">(</span><span class="token string">"\<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>username<span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span> <span class="token keyword">private</span> <span class="token keyword">val</span> userName<span class="token operator">:</span> String<span class="token punctuation">,</span>
+    <span class="token annotation builtin">@Value</span><span class="token punctuation">(</span><span class="token string">"\<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>spring<span class="token punctuation">.</span>datasource<span class="token punctuation">.</span>password<span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span> <span class="token keyword">private</span> <span class="token keyword">val</span> password<span class="token operator">:</span> String<span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token operator">:</span> HikariDao <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">companion</span> <span class="token keyword">object</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">private</span> <span class="token keyword">const</span> <span class="token keyword">val</span> TIME <span class="token operator">=</span> <span class="token string">"time"</span>
+        <span class="token keyword">private</span> <span class="token keyword">const</span> <span class="token keyword">val</span> COUNT <span class="token operator">=</span> <span class="token string">"personCount"</span>
+        <span class="token keyword">private</span> <span class="token keyword">const</span> <span class="token keyword">val</span> SQL <span class="token operator">=</span> <span class="token string">"select now() as <span class="token interpolation variable">$TIME</span>"</span>
+        <span class="token keyword">private</span> <span class="token keyword">const</span> <span class="token keyword">val</span> SLOW_SQL <span class="token operator">=</span> <span class="token string">"select count(id) as <span class="token interpolation variable">$COUNT</span> from hikari_person"</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">useHikari</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> jdbcTemplate<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>SQL<span class="token punctuation">,</span> ResultSetExtractor <span class="token punctuation">&#123;</span>
+            it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span><span class="token label symbol">@ResultSetExtractor</span> it<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>TIME<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token operator">!!</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">useJdbc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> String <span class="token punctuation">&#123;</span>
+        <span class="token keyword">val</span> connection <span class="token operator">=</span> DriverManager<span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span>jdbcUrl<span class="token punctuation">,</span> userName<span class="token punctuation">,</span> password<span class="token punctuation">)</span>
+        connection<span class="token punctuation">.</span><span class="token function">use</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">val</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            statement<span class="token punctuation">.</span><span class="token function">use</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">val</span> result <span class="token operator">=</span> statement<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span>SQL<span class="token punctuation">)</span>
+                result<span class="token punctuation">.</span><span class="token function">use</span> <span class="token punctuation">&#123;</span>
+                    it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                    <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>TIME<span class="token punctuation">)</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">slowSql</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Int <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> jdbcTemplate<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>SLOW_SQL<span class="token punctuation">,</span> ResultSetExtractor <span class="token punctuation">&#123;</span>
+            it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span><span class="token label symbol">@ResultSetExtractor</span> it<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span>COUNT<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token operator">!!</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>因为连接池是懒加载的，我们先访问一下/slow,验证一下不加表锁的情况下可以正常执行并初始化连接池。<br>再通过jconsole看下连接池的情况。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206151609.png"><br>可以看到空闲连接1个，现在，我们把hikari_person表加上写锁，来模拟慢查询。<br><code>LOCK TABLES hikari_person WRITE;</code>  再访问/slow,直接卡住没有返回。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206152032.png"><br>可以看到活跃连接1个，已经没有空闲的了，这个时候我们访问/hikari<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206152151.png"><br>变成了1个活跃，1个等待，并且30秒报了超时异常。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206152344.png"><br>可以看到，确实配置可以生效，当连接池已满，再有请求就会被阻塞等待，然后超时。<br>记得执行<code>UNLOCK TABLES;</code>释放表锁。释放完后，原来等待返回的/slow直接返回了结果0。</p>
+<h3 id="数据源的初始化"><a href="#数据源的初始化" class="headerlink" title="数据源的初始化"></a>数据源的初始化</h3><p>之前已经看到spring boot启动的时候，会初始化HikariDataSource，关键代码</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Bean</span>
+<span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.datasource.hikari"</span><span class="token punctuation">)</span>
+<span class="token class-name">HikariDataSource</span> <span class="token function">dataSource</span><span class="token punctuation">(</span><span class="token class-name">DataSourceProperties</span> properties<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token class-name">HikariDataSource</span> dataSource <span class="token operator">=</span> <span class="token function">createDataSource</span><span class="token punctuation">(</span>properties<span class="token punctuation">,</span> <span class="token class-name">HikariDataSource</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">hasText</span><span class="token punctuation">(</span>properties<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		dataSource<span class="token punctuation">.</span><span class="token function">setPoolName</span><span class="token punctuation">(</span>properties<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> dataSource<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>再看一下HikariDataSource的类图<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206165729.png"></p>
+<p>由于HikariDataSource继承自HikariConfig，并且<code>@ConfigurationProperties(prefix = &quot;spring.datasource.hikari&quot;)</code>所以我们在application.properties里配置的属性，就初始化到了DataSource里。</p>
+<h3 id="HikariDataSource的获取连接"><a href="#HikariDataSource的获取连接" class="headerlink" title="HikariDataSource的获取连接"></a>HikariDataSource的获取连接</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Connection</span> <span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isClosed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SQLException</span><span class="token punctuation">(</span><span class="token string">"HikariDataSource "</span> <span class="token operator">+</span> <span class="token keyword">this</span> <span class="token operator">+</span> <span class="token string">" has been closed."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>fastPathPool <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">return</span> fastPathPool<span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token comment">// See http://en.wikipedia.org/wiki/Double-checked_locking#Usage_in_Java</span>
+  <span class="token class-name">HikariPool</span> result <span class="token operator">=</span> pool<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>result <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        result <span class="token operator">=</span> pool<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>result <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+           <span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           LOGGER<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"&#123;&#125; - Starting..."</span><span class="token punctuation">,</span> <span class="token function">getPoolName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+              pool <span class="token operator">=</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HikariPool</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">seal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           <span class="token punctuation">&#125;</span>
+           <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">PoolInitializationException</span> pie<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>pie<span class="token punctuation">.</span><span class="token function">getCause</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">SQLException</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                 <span class="token keyword">throw</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span><span class="token punctuation">)</span> pie<span class="token punctuation">.</span><span class="token function">getCause</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token punctuation">&#125;</span>
+              <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                 <span class="token keyword">throw</span> pie<span class="token punctuation">;</span>
+              <span class="token punctuation">&#125;</span>
+           <span class="token punctuation">&#125;</span>
+           LOGGER<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"&#123;&#125; - Start completed."</span><span class="token punctuation">,</span> <span class="token function">getPoolName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+     <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>HikariDataSource的getConnection方法，有个额外知识点，就是单例模式，HikariPool是单例的，使用了双重检测锁来完成单例操作。<br>获取连接之前，需要先进行连接池的初始化new HikariPool(this)。</p>
+<h3 id="连接池的初始化"><a href="#连接池的初始化" class="headerlink" title="连接池的初始化"></a>连接池的初始化</h3><p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%9E%E6%8E%A5%E6%B1%A0.jpg"></p>
+<p>connectionBag是连接池的并发数据结构，做了并发优化，后面再详细说明。<br>houseKeeper是保持连接池数量的线程池，核心数量为1，使用了ScheduledThreadPoolExecutor，默认30秒运行一次。<br>监控后面再单独介绍。<br>启用JMX之后，HikariConfigMXBean和HikariPoolMXBean将会展示到Mbean。<br>创建物理Connection使用了addConnectionExecutor，使用LinkedBlockingQueue，队列数量为配置的最大连接数，核心和最大线程都为1，使用了抛弃旧线程的策略。<br>关闭物理Connection使用了closeConnectionExecutor，使用LinkedBlockingQueue，队列数量为配置的最大连接数，核心和最大也为1，使用了直接在主线程运行的策略。<br>leakTaskFactory用于检测是否有连接泄漏，getConnection之后要及时close掉，如果没有及时close则会有泄漏。通过getConnection时延迟执行ProxyLeakTask，延迟最小值2秒，低于此值则默认不进行连接泄漏检测，如果在该时间内没有及时close，则该延迟任务将会执行，而在close方法里，对该任务进行了cancel，及时close就不会触发ProxyLeakTask。默认是0不执行连接泄漏检测，可以通过spring.datasource.hikari.leakDetectionThreshold=3000设置来启用。<br>到此连接池就初始化完了。</p>
+<h3 id="获取连接"><a href="#获取连接" class="headerlink" title="获取连接"></a>获取连接</h3><p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/%E8%8E%B7%E5%8F%96%E8%BF%9E%E6%8E%A5.jpg"><br>核心代码</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token class-name">Connection</span> <span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token keyword">long</span> hardTimeout<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span>
+   <span class="token punctuation">&#123;</span>
+      suspendResumeLock<span class="token punctuation">.</span><span class="token function">acquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">final</span> <span class="token keyword">long</span> startTime <span class="token operator">=</span> <span class="token function">currentTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">long</span> timeout <span class="token operator">=</span> hardTimeout<span class="token punctuation">;</span>
+         <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">PoolEntry</span> poolEntry <span class="token operator">=</span> connectionBag<span class="token punctuation">.</span><span class="token function">borrow</span><span class="token punctuation">(</span>timeout<span class="token punctuation">,</span> MILLISECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>poolEntry <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+               <span class="token keyword">break</span><span class="token punctuation">;</span> <span class="token comment">// We timed out... break and throw exception</span>
+            <span class="token punctuation">&#125;</span>
+
+            <span class="token keyword">final</span> <span class="token keyword">long</span> now <span class="token operator">=</span> <span class="token function">currentTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>poolEntry<span class="token punctuation">.</span><span class="token function">isMarkedEvicted</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token function">elapsedMillis</span><span class="token punctuation">(</span>poolEntry<span class="token punctuation">.</span>lastAccessed<span class="token punctuation">,</span> now<span class="token punctuation">)</span> <span class="token operator">></span> aliveBypassWindowMs <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">isConnectionAlive</span><span class="token punctuation">(</span>poolEntry<span class="token punctuation">.</span>connection<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+               <span class="token function">closeConnection</span><span class="token punctuation">(</span>poolEntry<span class="token punctuation">,</span> poolEntry<span class="token punctuation">.</span><span class="token function">isMarkedEvicted</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">?</span> EVICTED_CONNECTION_MESSAGE <span class="token operator">:</span> DEAD_CONNECTION_MESSAGE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+               timeout <span class="token operator">=</span> hardTimeout <span class="token operator">-</span> <span class="token function">elapsedMillis</span><span class="token punctuation">(</span>startTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+               metricsTracker<span class="token punctuation">.</span><span class="token function">recordBorrowStats</span><span class="token punctuation">(</span>poolEntry<span class="token punctuation">,</span> startTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+               <span class="token keyword">return</span> poolEntry<span class="token punctuation">.</span><span class="token function">createProxyConnection</span><span class="token punctuation">(</span>leakTaskFactory<span class="token punctuation">.</span><span class="token function">schedule</span><span class="token punctuation">(</span>poolEntry<span class="token punctuation">)</span><span class="token punctuation">,</span> now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+         <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>timeout <span class="token operator">></span> <span class="token number">0L</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+         metricsTracker<span class="token punctuation">.</span><span class="token function">recordBorrowTimeoutStats</span><span class="token punctuation">(</span>startTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token keyword">throw</span> <span class="token function">createTimeoutException</span><span class="token punctuation">(</span>startTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">interrupt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SQLException</span><span class="token punctuation">(</span>poolName <span class="token operator">+</span> <span class="token string">" - Interrupted during connection acquisition"</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span>
+         suspendResumeLock<span class="token punctuation">.</span><span class="token function">release</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>外部spring等访问的getConnection最终是访问了HikariPool的getConnection。<br>代码核心就是使用了并发数据结构ConnectionBag,ConnectionBag作用就是类似对象池，存储了数据库连接。<br>使用borrow方法，如果有可用的链接，即可获取到包装对象PoolEntry。<br>这里还有一个逻辑就是如果获取到的链接已经标记为关闭，或者存活时间超时，或者已经不可用，则</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">void</span> <span class="token function">closeConnection</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">PoolEntry</span> poolEntry<span class="token punctuation">,</span> <span class="token keyword">final</span> <span class="token class-name">String</span> closureReason<span class="token punctuation">)</span>
+   <span class="token punctuation">&#123;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>connectionBag<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>poolEntry<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">final</span> <span class="token class-name">Connection</span> connection <span class="token operator">=</span> poolEntry<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         closeConnectionExecutor<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+            <span class="token function">quietlyCloseConnection</span><span class="token punctuation">(</span>connection<span class="token punctuation">,</span> closureReason<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>poolState <span class="token operator">==</span> POOL_NORMAL<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+               <span class="token function">fillPool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+         <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从ConnectionBag移除，使用closeConnectionExecutor关闭链接，并补充数量。<br>所以getConnection里使用了do while来borrow获取一个链接。<br><code>return poolEntry.createProxyConnection(leakTaskFactory.schedule(poolEntry), now);</code><br>这块代码就是创建leakTask检测链接泄漏的同时，创建ProxyConnection返回。</p>
+<h3 id="归还连接"><a href="#归还连接" class="headerlink" title="归还连接"></a>归还连接</h3><p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112081615450.jpg"><br>由于之前获取的连接并不是真正JDBC的Connect驱动实现，而是代理实现，所以调用对应的close方法只是归还连接，而不是真正关闭物理连接，这样就实现了借用连接池的链接，在close的时候归还连接，以便后续使用。<br>我们通过打断点，也可以看到对应的对象都是代理过的对象。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211208154917.png"></p>
+<h3 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h3><p>由于需要对原生JDBC对象进行增强，所以HikariCP采用了代理技术，但是考虑性能问题，其没有使用JDK的动态代理，而是使用了字节码增强的伪动态代理，因为其字节码增强是在编译的时候增强的，使用了javassist来做字节码增强。<br>涉及到的类有，ProxyFactory，JavassistProxyFactory以及抽象类：ProxyCallableStatement，ProxyConnection，ProxyDatabaseMetaData，ProxyPreparedStatement，ProxyResultSet，ProxyStatement。<br>在JavassistProxyFactory里使用javassist字节码增强实现了HikariProxyConnection，HikariProxyPreparedStatement等具体类，其继承自上述抽象类，对于没有实现的方法，采用了代理调用方式自动生成方法实现。<br>既然ProxyConnection等抽象类都已经有具体代理实现方法了，为什么还要字节码增强来生成非抽象子类呢？何况你还是静态生成？<br>原因是因为，ProxyConnection等抽象类之所以设计成抽象类，就是因为不想实现自己不关心的接口，举个栗子，光Connection接口就几十个方法，需要代理的也就十几个方法，如果不以抽象类的方式，则需要全部实现这几十个方法，并且自己不关心的实现都只是简单调用驱动实现类的方法，可读性和维护性不高。如果是动态运行时字节码增强，无可厚非，但是编译期增强的话，根本原因，其实还是作者懒，宁愿字节码自动生成也不愿意代码实现，不过javassist本身也不支持动态运行时字节码替换。javassist类库本身很简单，封装了字节码的操作，很容易就上手，感兴趣的可以自己试试写个例子就会用了。</p>
+<h3 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h3><p>我们来写个动态代理的例子，实现对sql的日志打印，实现动态代理的方法很多，我们今天使用bytekit来实现。bytekit是arthas的底层字节码增强类库，通过注解的方式，很方便进行字节码增强，不止用来实现代理，还可以用于APM，功能很强大。<br>我们对Hikari的ProxyStatement的executeQuery方法进行字节码增强，来实现控制台打印其参数SQL的功能。<br>ProxyStatement的executeQuery实现如下：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">ResultSet</span> <span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token class-name">String</span> sql<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span>
+<span class="token punctuation">&#123;</span>
+  connection<span class="token punctuation">.</span><span class="token function">markCommitStateDirty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">ResultSet</span> resultSet <span class="token operator">=</span> delegate<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span>sql<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token class-name">ProxyFactory</span><span class="token punctuation">.</span><span class="token function">getProxyResultSet</span><span class="token punctuation">(</span>connection<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">,</span> resultSet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们首先引入bytekit的pom依赖</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.alibaba<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>bytekit-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>0.0.7<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>net.bytebuddy<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>byte-buddy-agent<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.12.3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.benf<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>cfr<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>0.151<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>写一个辅助类</p>
+<pre class="line-numbers language-kotlin" data-language="kotlin"><code class="language-kotlin"><span class="token keyword">class</span> ProxyUtil <span class="token punctuation">&#123;</span>
+    <span class="token keyword">companion</span> <span class="token keyword">object</span> <span class="token punctuation">&#123;</span>
+
+        <span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">enhanceClass</span><span class="token punctuation">(</span>
+            targetClass<span class="token operator">:</span> KClass<span class="token operator">&lt;</span>ProxyStatement<span class="token operator">></span><span class="token punctuation">,</span>
+            targetMethodName<span class="token operator">:</span> String<span class="token punctuation">,</span>
+            proxyClass<span class="token operator">:</span> KClass<span class="token operator">&lt;</span>SqlLogInterceptor<span class="token operator">></span>
+        <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            AgentUtils<span class="token punctuation">.</span><span class="token function">install</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">val</span> interceptorClassParser <span class="token operator">=</span> <span class="token function">DefaultInterceptorClassParser</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">val</span> parseList <span class="token operator">=</span> interceptorClassParser<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>proxyClass<span class="token punctuation">.</span>java<span class="token punctuation">)</span>
+            <span class="token keyword">val</span> loadClass <span class="token operator">=</span> AsmUtils<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span>targetClass<span class="token punctuation">.</span>java<span class="token punctuation">)</span>
+            loadClass<span class="token punctuation">.</span>methods<span class="token punctuation">.</span><span class="token function">filter</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">return</span><span class="token label symbol">@filter</span> it<span class="token punctuation">.</span>name<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>targetMethodName<span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">.</span><span class="token function">onEach</span> <span class="token punctuation">&#123;</span> methodNode <span class="token operator">-></span>
+                <span class="token keyword">val</span> methodProcessor <span class="token operator">=</span> <span class="token function">MethodProcessor</span><span class="token punctuation">(</span>loadClass<span class="token punctuation">,</span> methodNode<span class="token punctuation">)</span>
+                parseList<span class="token punctuation">.</span><span class="token function">onEach</span> <span class="token punctuation">&#123;</span> parse <span class="token operator">-></span>
+                    parse<span class="token punctuation">.</span><span class="token function">process</span><span class="token punctuation">(</span>methodProcessor<span class="token punctuation">)</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">val</span> bytes <span class="token operator">=</span> AsmUtils<span class="token punctuation">.</span><span class="token function">toBytes</span><span class="token punctuation">(</span>loadClass<span class="token punctuation">)</span>
+            <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"decompile:<span class="token interpolation"><span class="token delimiter variable">$&#123;</span>Decompiler<span class="token punctuation">.</span><span class="token function">decompile</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span><span class="token delimiter variable">&#125;</span></span>"</span><span class="token punctuation">)</span>
+            AgentUtils<span class="token punctuation">.</span><span class="token function">reTransform</span><span class="token punctuation">(</span>targetClass<span class="token punctuation">.</span>java<span class="token punctuation">,</span> bytes<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>编写实际增强代码</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SqlLogInterceptor</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@AtEnter</span><span class="token punctuation">(</span>inline <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">atEnter</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Binding.Args</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">,</span> <span class="token annotation punctuation">@Binding.Field</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"isClosed"</span><span class="token punctuation">)</span> <span class="token keyword">boolean</span> isClosed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"isClosed = "</span> <span class="token operator">+</span> isClosed<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"sql = "</span> <span class="token operator">+</span> args<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>ProxyStatement有一个私有属性isClosed，我们都可以拿到并使用。inline代表混入到源字节码里。我们看看反编译后的样子。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">ResultSet</span> <span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token class-name">String</span> string<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">void</span> sql<span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span> bl <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>isClosed<span class="token punctuation">;</span>
+    <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> objectArray <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">&#123;</span>string<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"isClosed = "</span> <span class="token operator">+</span> bl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"sql = "</span> <span class="token operator">+</span> objectArray<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>connection<span class="token punctuation">.</span><span class="token function">markCommitStateDirty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">ResultSet</span> resultSet <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>delegate<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span>sql<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">ProxyFactory</span><span class="token punctuation">.</span><span class="token function">getProxyResultSet</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>connection<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">,</span> resultSet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>反编译后虽然不太正常，但是真实增强代码确实已经添加进去了，我们执行一下看看。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091150526.png"><br>确实打印了出来。</p>
+<h3 id="Hikari为什么这么快"><a href="#Hikari为什么这么快" class="headerlink" title="Hikari为什么这么快"></a>Hikari为什么这么快</h3><p>因为Hikari代码比较精简，并且在细节上下了很大功夫，除了使用静态字节码增强来优化性能之前，其在并发性能上也下了功夫，具体就是对并发数据结构的创建和使用。</p>
+<h4 id="ConnectionBag"><a href="#ConnectionBag" class="headerlink" title="ConnectionBag"></a>ConnectionBag</h4><p>ConnectionBag可以说是hikari的核心，所有连接的创建，获取，归还，释放等等都和其息息相关，先来看下类结构。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091846818.png"><br>最核心的几个方法是add,borrow,requite,remove。ConnectionBag内部使用了ThreadLocal和SynchronousQueue，CopyOnWriteArrayList以及waiters:AtomicInteger来保证并发安全以及快速获取连接。</p>
+<h4 id="borrow"><a href="#borrow" class="headerlink" title="borrow"></a>borrow</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token class-name">T</span> <span class="token function">borrow</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">,</span> <span class="token keyword">final</span> <span class="token class-name">TimeUnit</span> timeUnit<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span>
+<span class="token punctuation">&#123;</span>
+   <span class="token comment">// Try the thread-local list first</span>
+   <span class="token keyword">final</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> threadList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">final</span> <span class="token class-name">Object</span> entry <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token annotation punctuation">@SuppressWarnings</span><span class="token punctuation">(</span><span class="token string">"unchecked"</span><span class="token punctuation">)</span>
+      <span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry <span class="token operator">=</span> weakThreadLocals <span class="token operator">?</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">WeakReference</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span><span class="token punctuation">)</span> entry<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span> entry<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>bagEntry <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">,</span> STATE_IN_USE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">return</span> bagEntry<span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+   <span class="token punctuation">&#125;</span>
+
+   <span class="token comment">// Otherwise, scan the shared list ... then poll the handoff queue</span>
+   <span class="token keyword">final</span> <span class="token keyword">int</span> waiting <span class="token operator">=</span> waiters<span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">T</span> bagEntry <span class="token operator">:</span> sharedList<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span>bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">,</span> STATE_IN_USE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">// If we may have stolen another waiter's connection, request another bag add.</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>waiting <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+               listener<span class="token punctuation">.</span><span class="token function">addBagItem</span><span class="token punctuation">(</span>waiting <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">return</span> bagEntry<span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">&#125;</span>
+
+      listener<span class="token punctuation">.</span><span class="token function">addBagItem</span><span class="token punctuation">(</span>waiting<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      timeout <span class="token operator">=</span> timeUnit<span class="token punctuation">.</span><span class="token function">toNanos</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">final</span> <span class="token keyword">long</span> start <span class="token operator">=</span> <span class="token function">currentTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry <span class="token operator">=</span> handoffQueue<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span>timeout<span class="token punctuation">,</span> NANOSECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span>bagEntry <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">,</span> STATE_IN_USE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> bagEntry<span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+
+         timeout <span class="token operator">-=</span> <span class="token function">elapsedNanos</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>timeout <span class="token operator">></span> <span class="token number">10_000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span>
+      waiters<span class="token punctuation">.</span><span class="token function">decrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>先看下borrow方法，首先在ThreadLocal里获取可用连接，如果没有，则在sharedList里获取，sharedList是CopyOnWriteArrayList并发集合类，如果还没有，就触发添加连接的请求，然后阻塞到handoffQueue: SynchronousQueue上，直到超时。<br>ThreadLocal默认是一个简化过的List，FastList，其实现去掉了越界检查，只实现了自己用到的方法，并且remove(Object object)方法是倒序查找。</p>
+<h4 id="requite"><a href="#requite" class="headerlink" title="requite"></a>requite</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">requite</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  bagEntry<span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> waiters<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">if</span> <span class="token punctuation">(</span>bagEntry<span class="token punctuation">.</span><span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> STATE_NOT_IN_USE <span class="token operator">||</span> handoffQueue<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+     <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>i <span class="token operator">&amp;</span> <span class="token number">0xff</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0xff</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">parkNanos</span><span class="token punctuation">(</span>MICROSECONDS<span class="token punctuation">.</span><span class="token function">toNanos</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+     <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token keyword">yield</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">final</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span> threadLocalList <span class="token operator">=</span> threadList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>threadLocalList<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">50</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     threadLocalList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>weakThreadLocals <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">WeakReference</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span> <span class="token operator">:</span> bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>归还方法比较简单，如果有线程等待，则直接归还到handoffQueue上，快速转让，并寄存到threadLocal里，方便下次获取。</p>
+<h4 id="add"><a href="#add" class="headerlink" title="add"></a>add</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>closed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     LOGGER<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"ConcurrentBag has been closed, ignoring add()"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalStateException</span><span class="token punctuation">(</span><span class="token string">"ConcurrentBag has been closed, ignoring add()"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  sharedList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// spin until a thread takes it or none are waiting</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>waiters<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> bagEntry<span class="token punctuation">.</span><span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> STATE_NOT_IN_USE <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>handoffQueue<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token keyword">yield</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>add方法不对外暴露，在checkFailFast和fillPool被调用。</p>
+<h4 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">remove</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_IN_USE<span class="token punctuation">,</span> STATE_REMOVED<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_RESERVED<span class="token punctuation">,</span> STATE_REMOVED<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>closed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     LOGGER<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Attempt to remove an object from the bag that was not borrowed or reserved: &#123;&#125;"</span><span class="token punctuation">,</span> bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">final</span> <span class="token keyword">boolean</span> removed <span class="token operator">=</span> sharedList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>removed <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>closed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     LOGGER<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Attempt to remove an object from the bag that does not exist: &#123;&#125;"</span><span class="token punctuation">,</span> bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  threadList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> removed<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>另外一个比较重要的类就是PoolEntry，封装了Connection以及Connection对应的Statement和对应的使用状态等，这里存储Statement也是使用的FastList。ConcurrentBag里存储的就是PoolEntry对象。</p>
+<h3 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h3><p>说实话，hikari的监控做的不是很好，比如说对数据库查询异常日志的记录，对慢查询SQL的记录等等都没有，这也恰恰是其之所以比较快的原因，做好数据库连接池的功能，不把乱七八糟的东西引进来，但是并不是其一点监控数据都没有，可以借助spring的actuator功能，监控一些连接池自身的数据。<br>只需要在pom里添加对应的依赖</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-actuator<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+ <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>io.micrometer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>micrometer-registry-prometheus<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.8.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>启动项目，通过<a target="_blank" rel="noopener" href="http://localhost:8080/actuator/">http://localhost:8080/actuator/</a> 访问<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091918834.png"><br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091918768.png"><br>通过集成Prometheus以及Grafana则可以收集并图形化展示监控数据，这里就不做过多介绍了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>hikari虽然代码比较少，但是麻雀虽小五脏俱全，涉及到很多知识点</p>
+<ol>
+<li>单例模式</li>
+<li>JMX</li>
+<li>字节码增强，代理模式</li>
+<li>并发数据结构</li>
+<li>监控集成</li>
+</ol>
+<p>希望大家能从本文能收获一些东西，再见。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">王登武</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://wdw.pub/2021/12/01/shen-ru-qian-chu-hikaricp-shu-ju-ku-lian-jie-chi/">https://wdw.pub/2021/12/01/shen-ru-qian-chu-hikaricp-shu-ju-ku-lian-jie-chi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">王登武</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/HikariCP/">
+                                    <span class="chip bg-color">HikariCP</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/">
+                                    <span class="chip bg-color">数据库连接池</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,qzone,wechat,weibo" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 wechat-tab waves-effect waves-light">
+                            <a href="#wechat">微 信</a>
+                        </li>
+                        <li class="tab col s6 alipay-tab waves-effect waves-light">
+                            <a href="#alipay">支付宝</a>
+                        </li>
+                    </ul>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay1.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <script src="https://utteranc.es/client.js"
+        repo="wangdengwu/wangdengwu.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+    </script>
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/12/01/shen-ru-qian-chu-hikaricp-shu-ju-ku-lian-jie-chi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="深入浅出HikariCP数据库连接池">
+                        
+                        <span class="card-title">深入浅出HikariCP数据库连接池</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-01
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/HikariCP/">
+                        <span class="chip bg-color">HikariCP</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/">
+                        <span class="chip bg-color">数据库连接池</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/11/24/han-shu-shi-bian-cheng-jian-jie/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="函数式编程简介">
+                        
+                        <span class="card-title">函数式编程简介</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-24
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" class="post-category">
+                                    函数式编程
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/">
+                        <span class="chip bg-color">函数式编程</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 武码公社<br />'
+            + '文章作者: 王登武<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021</span>
+            
+            <a href="/about" target="_blank">王登武</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">18.2k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2021";
+                        var startMonth = "10";
+                        var startDate = "22";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/wangdengwu" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=251472795" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 251472795" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+    <a href="https://www.zhihu.com/people/wangdengwu" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/wangdengwu" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
