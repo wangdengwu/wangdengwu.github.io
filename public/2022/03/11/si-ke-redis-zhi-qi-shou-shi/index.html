@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="使用selenium4监听网络请求, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
-    <meta name="description" content="selenium4支持devTools以往selenium更多的是用来作为UI自动化工具，因为其可以编程获取页面元素，并交互，而爬取数据往往因为页面元素的展示，和实际网络请求并不一致导致只是通过页面无法获取到精确数据。现在selenium4">
+    <meta name="keywords" content="死磕redis之起手式, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
+    <meta name="description" content="死磕Redis系列Redis作为集中式缓存（也支持分布式架构），不管是单体应用还是分布式微服务都离不开，所以对Redis进行深入了解则显得额外重要，所以打算做一个死磕Redis系列，从浅到深的系统介绍一下Redis，当然这也是很好的对知识的">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>使用selenium4监听网络请求 | 武码公社</title>
+    <title>死磕redis之起手式 | 武码公社</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">使用selenium4监听网络请求</h1>
+                    <h1 class="description center-align post-title">死磕redis之起手式</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/selenium/">
-                                <span class="chip bg-color">selenium</span>
+                            <a href="/tags/redis/">
+                                <span class="chip bg-color">redis</span>
                             </a>
                         
-                            <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
-                                <span class="chip bg-color">UI自动化</span>
+                            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+                                <span class="chip bg-color">分布式缓存</span>
                             </a>
                         
                     </div>
@@ -424,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%B5%8B%E8%AF%95/" class="post-category">
-                                测试
+                            <a href="/categories/%E6%AD%BB%E7%A3%95Redis/" class="post-category">
+                                死磕Redis
                             </a>
                         
                     </div>
@@ -437,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-10-26
+                    2022-03-11
                 </div>
                 
 
@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    961
+                    1.1k
                 </div>
                 
 
@@ -476,46 +476,54 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="selenium4支持devTools"><a href="#selenium4支持devTools" class="headerlink" title="selenium4支持devTools"></a>selenium4支持devTools</h3><p>以往selenium更多的是用来作为UI自动化工具，因为其可以编程获取页面元素，并交互，而爬取数据往往因为页面元素的展示，和实际网络请求并不一致导致只是通过页面无法获取到精确数据。<br>现在selenium4则提供了devTools交互，Chrome等浏览器自身携带了devTools，以方便开发者调试页面，比较常用的就是查看页面元素，以及查看对应的网络请求数据。<br>浏览器自带的devTools如下所示</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/wangdengwu.github.io/source/_posts/assets/16352486276926.jpg"></p>
-<h3 id="selenium环境搭建"><a href="#selenium环境搭建" class="headerlink" title="selenium环境搭建"></a>selenium环境搭建</h3><p>我们以Chrome为例搭建selenium环境<br>首先需要确定我们的Chrome浏览器的版本，如果你没有安装，则需要先安装Chrome浏览器，比如现在最新的Chrome浏览器版本为94.0.4606.81<br>另外下载对应版本的chromedriver,<a target="_blank" rel="noopener" href="http://npm.taobao.org/mirrors/chromedriver/">下载地址(taobao镜像)</a> 选择和Chrome版本一致的文件夹，并下载和自己操作系统一致的文件。<br>下载完成后，需要把chromedriver放到系统可执行路径下，比如Linux或Mac可以放到/usr/local/bin/<br>然后通过命令行启动Chrome，对于Windows可以在桌面Chrome应用的快捷方式添加启动参数。启动命令如下</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./Google<span class="token punctuation">\</span> Chrome --remote-debugging-port<span class="token operator">=</span><span class="token number">9222</span> --user-data-dir<span class="token operator">=</span><span class="token string">"/Users/xxxx/chrome2"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>其中最主要的2个参数是–remote-debugging-port和–user-data-dir</p>
-<h3 id="程序调用"><a href="#程序调用" class="headerlink" title="程序调用"></a>程序调用</h3><p>当我们启动好Chrome之后，就可以通过代码的方式来进行交互了。<br>这里我使用Java语言来展示关键代码，对应pom里需要使用最新的selenium依赖</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
-    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>org<span class="token punctuation">.</span>seleniumhq<span class="token punctuation">.</span>selenium<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
-    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>selenium<span class="token operator">-</span>java<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
-    <span class="token generics"><span class="token punctuation">&lt;</span>version<span class="token punctuation">></span></span><span class="token number">4.0</span><span class="token number">.0</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
-<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="配置启动参数"><a href="#配置启动参数" class="headerlink" title="配置启动参数"></a>配置启动参数</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ChromeOptions</span> chromeOptions <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ChromeOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-chromeOptions<span class="token punctuation">.</span><span class="token function">setExperimentalOption</span><span class="token punctuation">(</span><span class="token string">"debuggerAddress"</span><span class="token punctuation">,</span> <span class="token string">"127.0.0.1:9222"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">WebDriver</span> driver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ChromeDriver</span><span class="token punctuation">(</span>chromeOptions<span class="token punctuation">)</span><span class="token punctuation">;</span>
-driver<span class="token punctuation">.</span><span class="token function">manage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">timeouts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">implicitlyWait</span><span class="token punctuation">(</span><span class="token class-name">Duration</span><span class="token punctuation">.</span><span class="token function">ofSeconds</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">this</span><span class="token punctuation">.</span>driver <span class="token operator">=</span> driver<span class="token punctuation">;</span>
-<span class="token keyword">this</span><span class="token punctuation">.</span>devTools <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ChromeDriver</span><span class="token punctuation">)</span> driver<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getDevTools</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-devTools<span class="token punctuation">.</span><span class="token function">createSession</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-devTools<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token class-name">Network</span><span class="token punctuation">.</span><span class="token function">enable</span><span class="token punctuation">(</span><span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>这里初始化driver的时候，参数里的port一定要和启动Chrome时配置的port对应上。<br>而devTools则可以通过ChromeDriver直接获取到，devTools有很多api，而我们只演示监听网络数据的功能。</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">devTools<span class="token punctuation">.</span><span class="token function">addListener</span><span class="token punctuation">(</span><span class="token class-name">Network</span><span class="token punctuation">.</span><span class="token function">responseReceived</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>responseReceived <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
-           <span class="token class-name">RequestId</span> requestId <span class="token operator">=</span> responseReceived<span class="token punctuation">.</span><span class="token function">getRequestId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-           <span class="token class-name">Network<span class="token punctuation">.</span>GetResponseBodyResponse</span> response <span class="token operator">=</span> devTools<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token class-name">Network</span><span class="token punctuation">.</span><span class="token function">getResponseBody</span><span class="token punctuation">(</span>requestId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-           <span class="token class-name">String</span> body <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>devTools是通过事件监听来获取网络数据的，具体监听事件有很多，比如responseReceived，requestWillBeSent，dataReceived等等。<br>需要注意的有几点：</p>
+                <h3 id="死磕Redis系列"><a href="#死磕Redis系列" class="headerlink" title="死磕Redis系列"></a>死磕Redis系列</h3><p>Redis作为集中式缓存（也支持分布式架构），不管是单体应用还是分布式微服务都离不开，所以对Redis进行深入了解则显得额外重要，所以打算做一个死磕Redis系列，从浅到深的系统介绍一下Redis，当然这也是很好的对知识的梳理和再学习的机会，因为最好的学习方式就是能清晰的讲给别人听。<br>我个人认为学习一项知识或者技术，大致分为三个阶段，</p>
 <ol>
-<li>获取response的时候，记得try catch，以防止有的请求并没有body导致的异常。</li>
-<li>responseReceived事件触发时，这个时候获取response未必能取到，因为只是响应返回了，但是body可能比较大，数据可能还没有接收完。</li>
-<li>dataReceived事件触发时，大概率是可以获取到返回的body的，但是保险起见，可以sleep500毫秒。</li>
-<li>如果有一些请求，请求的URL都一样，只是参数不同，而我们只关心特定参数的request返回的response，则可以订阅requestWillBeSent事件，确认该请求是需要的，则把RequestId扔到队列里，在dataReceived的时候从队列里取出RequestId来获取返回数据。</li>
-<li>requestWillBeSent的RequestId和dataReceived的RequestId内容是一样的。</li>
+<li>熟练使用</li>
+<li>原理架构</li>
+<li>深入源码</li>
 </ol>
-<p>除了通过devTools监听数据外，还可以做很多其它的事情，比如修改请求HEAD，修改Cookie，具体API可以去<a target="_blank" rel="noopener" href="https://www.selenium.dev/documentation/webdriver/bidi_apis/">官网</a>查询。</p>
-<p>当然有了driver一样可以像以前一样，访问URL，获取页面元素，交互。比如如下代码</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">driver<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>login<span class="token punctuation">)</span><span class="token punctuation">;</span>
-driver<span class="token punctuation">.</span><span class="token function">findElement</span><span class="token punctuation">(</span><span class="token class-name">By</span><span class="token punctuation">.</span><span class="token function">xpath</span><span class="token punctuation">(</span><span class="token string">"//*[@id=\"root\"]/div/section/header/div[1]/div/div/div/div[2]/span"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-driver<span class="token punctuation">.</span><span class="token function">findElement</span><span class="token punctuation">(</span><span class="token class-name">By</span><span class="token punctuation">.</span><span class="token function">className</span><span class="token punctuation">(</span><span class="token string">"semi-button-content"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>有了devTools监听网络数据，更方便爬取一些数据，尤其是需要授权登录的情况，我们可以事先登录或者远程登录的方式，来获取一些我们想要的数据。<br>以上就是对selenium4新功能devTools的介绍。</p>
+<p>首先需要先动手，先用起来，写写demo，做做项目，有一个大概的认知。<br>随着可以掌握大部分功能，就可以深入其原理和架构，了解其设计和思想是什么样的，这个时候就对其整体有了认知。<br>当有了全局和思想的掌握后，就可以深入细节，阅读源码则更能由表入里，完全掌握这项技术或中间件。<br>当然这三个部分是互相循环的，互为助推，随着熟练使用，就接触到一部分原理和架构，然后可能也会看一部分源码， 继而更有助于熟练使用，也能更理解原理和架构。就像下面这张图一样。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203111725715.jpg"></p>
+<h3 id="死磕Redis系列大纲"><a href="#死磕Redis系列大纲" class="headerlink" title="死磕Redis系列大纲"></a>死磕Redis系列大纲</h3><p>大概计划了一个大纲<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203111728829.png"><br>如果能写完死磕Redis系列，效果还不错的话，可能还会有《死磕Netty》《死磕Kotlin》《死磕Java并发》等等系列吧。</p>
+<h3 id="死磕Redis之起手式"><a href="#死磕Redis之起手式" class="headerlink" title="死磕Redis之起手式"></a>死磕Redis之起手式</h3><p>那么我们就正式进入死磕Redis系列的起手式。<br>不要小看起手式，陈氏太极拳里的起手式可以起到静气凝神，是为后续宜柔宜刚打下基础，也起了一个基调。</p>
+<h3 id="本地单机Redis"><a href="#本地单机Redis" class="headerlink" title="本地单机Redis"></a>本地单机Redis</h3><p>开始死磕Redis之前，我们首先需要有个Redis，那如何快速获取一个Redis呢？有2种方式，自己本地装一个，或者使用docker启动一个。<br>我推荐使用docker，因为简单方便，使用之后清理也方便，最重要的是不会污染你本地环境和端口。<br>首先我们先装一个<a target="_blank" rel="noopener" href="https://www.docker.com/get-started">docker desktop</a>，具体点击链接按照指引即可安装成功。<br>然后我们去DockerHub搜一下<a target="_blank" rel="noopener" href="https://hub.docker.com/_/redis?tab=tags">Redis</a>的镜像，点击链接即可跳转过去，Redis的版本很多，我们暂时选最新稳定版6.2.6。<br>启动Redis实例<code>docker run --name redis -p 127.0.0.1:6379:6379 -d redis:6.2.6</code>，运行<code>docker ps</code>就可以看到运行中的redis实例了。<br>如果本地没有安装redis，没有redis-cli工具，则可以使用<code>docker exec -it redis redis-cli</code>连到容器的redis，执行info命令就可以看到redis服务的信息了。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112301578.png"></p>
+<h3 id="spring-boot连接Redis"><a href="#spring-boot连接Redis" class="headerlink" title="spring boot连接Redis"></a>spring boot连接Redis</h3><p>我们首先可以使用<a target="_blank" rel="noopener" href="https://start.spring.io/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E9%AA%A8%E6%9E%B6%E7%A8%8B%E5%BA%8F">https://start.spring.io/创建一个骨架程序</a><br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112315606.png"><br>点击生成下载到本地后，使用IntelliJ打开<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112352611.png"><br>如果你按照上述步骤来动手实践的话，我希望你在demo文件夹下使用git init来初始化代码仓库，以方便对代码进行版本管理。</p>
+<h3 id="HelloRedis"><a href="#HelloRedis" class="headerlink" title="HelloRedis"></a>HelloRedis</h3><p>我们需要添加一些代码，设置Redis相关的配置，来执行HelloRedis的操作。<br>首先我们先在application.properties添加Redis连接信息</p>
+<pre class="line-numbers language-properties" data-language="properties"><code class="language-properties"><span class="token attr-name">spring.redis.host</span><span class="token punctuation">=</span><span class="token attr-value">127.0.0.1</span>
+<span class="token attr-name">spring.redis.port</span><span class="token punctuation">=</span><span class="token attr-value">6379</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>然后创建一个HelloRedisController来响应http，并对Redis进行操作</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">learn<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>controller</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Autowired</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>data<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>core<span class="token punctuation">.</span></span><span class="token class-name">StringRedisTemplate</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">GetMapping</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RequestMapping</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RequestParam</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RestController</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * @author wangdengwu
+ */</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/redis"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloRedisController</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> HELLO <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">StringRedisTemplate</span> stringRedisTemplate<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/hello"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">helloRedis</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>required <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>name <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> name<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">String</span> result <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>HELLO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> HELLO <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> result<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>HELLO<span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> HELLO <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> name<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用mvn spring-boot:run或者在IDE里启动DemoApplication<br>然后在浏览器里输入<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/redis/hello?name=redis">http://127.0.0.1:8080/redis/hello?name=redis</a><br>这样就将redis字符串存到了redis里，再执行<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/redis/hello%EF%BC%8C%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0hello">http://127.0.0.1:8080/redis/hello，就可以看到hello</a> redis了<br>也可以使用命令<code>docker exec -it redis redis-cli</code>连接到redis，执行<code>keys *</code>以及<code>get hello</code>和<code>type hello</code>可以看到redis内存储的数据信息<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203120044575.png"></p>
+<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>虽然这个起手式真的很简单，但是它打通了我们连接redis的第一步，后续我们将持续增加功能来对redis进行操作</p>
 
                 
             </div>
@@ -542,7 +550,7 @@ driver<span class="token punctuation">.</span><span class="token function">findE
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dengwu.wang/2021/10/26/shi-yong-selenium4-jian-ting-wang-luo-qing-qiu/">https://dengwu.wang/2021/10/26/shi-yong-selenium4-jian-ting-wang-luo-qing-qiu/</a>
+                    <a href="https://dengwu.wang/2022/03/11/si-ke-redis-zhi-qi-shou-shi/">https://dengwu.wang/2022/03/11/si-ke-redis-zhi-qi-shou-shi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -580,12 +588,12 @@ driver<span class="token punctuation">.</span><span class="token function">findE
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/selenium/">
-                                    <span class="chip bg-color">selenium</span>
+                                <a href="/tags/redis/">
+                                    <span class="chip bg-color">redis</span>
                                 </a>
                             
-                                <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
-                                    <span class="chip bg-color">UI自动化</span>
+                                <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+                                    <span class="chip bg-color">分布式缓存</span>
                                 </a>
                             
                         </div>
@@ -769,17 +777,18 @@ driver<span class="token punctuation">.</span><span class="token function">findE
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/10/26/ling-yu-qu-dong-she-ji-jian-jie/">
+                <a href="/2022/03/11/si-ke-redis-zhi-qi-shou-shi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="领域驱动设计简介">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="死磕redis之起手式">
                         
-                        <span class="card-title">领域驱动设计简介</span>
+                        <span class="card-title">死磕redis之起手式</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -789,30 +798,31 @@ driver<span class="token punctuation">.</span><span class="token function">findE
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-26
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-11
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="post-category">
-                                    程序设计
+                            <a href="/categories/%E6%AD%BB%E7%A3%95Redis/" class="post-category">
+                                    死磕Redis
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/DDD/">
-                        <span class="chip bg-color">DDD</span>
+                    <a href="/tags/redis/">
+                        <span class="chip bg-color">redis</span>
                     </a>
                     
-                    <a href="/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/">
-                        <span class="chip bg-color">领域驱动</span>
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+                        <span class="chip bg-color">分布式缓存</span>
                     </a>
                     
                 </div>
@@ -826,13 +836,13 @@ driver<span class="token punctuation">.</span><span class="token function">findE
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/10/22/hello-world/">
+                <a href="/2022/03/10/java-threadlocal-tan-mi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Java ThreadLocal探秘">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">Java ThreadLocal探秘</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -843,14 +853,14 @@ driver<span class="token punctuation">.</span><span class="token function">findE
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-22
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-10
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B5%8B%E8%AF%95/" class="post-category">
-                                    测试
+                            <a href="/categories/Java/" class="post-category">
+                                    Java
                                 </a>
                             
                             
@@ -860,12 +870,8 @@ driver<span class="token punctuation">.</span><span class="token function">findE
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Test/">
-                        <span class="chip bg-color">Test</span>
-                    </a>
-                    
-                    <a href="/tags/First/">
-                        <span class="chip bg-color">First</span>
+                    <a href="/tags/ThreadLocal/">
+                        <span class="chip bg-color">ThreadLocal</span>
                     </a>
                     
                 </div>
