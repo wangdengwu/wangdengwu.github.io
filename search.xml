@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>死磕Redis之持久化</title>
+      <link href="/2022/03/21/si-ke-redis-zhi-chi-jiu-hua/"/>
+      <url>/2022/03/21/si-ke-redis-zhi-chi-jiu-hua/</url>
+      
+        <content type="html"><![CDATA[<h3 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h3><p>Redis实现持久化有2种方式，全量快照RDB和追加日志AOF。</p><h4 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h4><p>RDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时会导致分钟级别以上的数据缺失。<br>可以通过配置save “”来禁用。<br>RDB的原理就是把内存全量数据写到文件里，采用压缩数据的方式，所以快照文件大小会比较小。<br>可以使用save阻塞主线程的方式，也可以使用bgsave命令异步执行。<br>也可以自动执行保存快照，通过配置save 300 100来自动执行，300代表300秒，100代表100次改动，任何一个达到就会触发。<br>另外RDB不适合频繁写入，尤其是内存数据比较多的情况下，会导致磁盘IO压力比较大，可能这次还没全量写完，下次就又触发了，这也是不推荐使用RDB的原因，同时子进程虽然异步写，但是由于WOC（write on copy）的机制，也会导致内存暴涨，容易在内存吃紧的时候，导致不可用。</p><h4 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h4><p>AOF采用追加指令的方式写日志，采用的是写后日志，即先写内存，再写日志，和（Write Ahead Log）WAL相反。<br>为什么采用后写呢？因为可以避免指令检查，先写内存成功则代表指令是合法的，而且也不会阻塞当前的「写」指令执行。</p><h4 id="写回策略"><a href="#写回策略" class="headerlink" title="写回策略"></a>写回策略</h4><p>AOF可以配置写回策略，即频率和是否阻塞，通过配置appendfsync，一共有3个选项：always，everysec，no</p><ul><li>always：同步写回，写指令执行完毕立马将 aof_buf缓冲区中的内容刷写到 AOF 文件。</li><li>everysec：每秒写回，写指令执行完，日志只会写到 AOF 文件缓冲区，每隔一秒就把缓冲区内容同步到磁盘。</li><li>no： 操作系统控制，写执行执行完毕，把日志写到 AOF 文件内存缓冲区，由操作系统决定何时刷写到磁盘。</li></ul><p>推荐使用everysec</p><h4 id="AOF日志过大怎么办？"><a href="#AOF日志过大怎么办？" class="headerlink" title="AOF日志过大怎么办？"></a>AOF日志过大怎么办？</h4><p>既然是追加，那难免日志会越来越大，日志过大会导致写性能越来越差，甚至导致磁盘不足等风险。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211549622.png"><br>AOF采用重写机制来优化日志，rewrite即将日志内容合并，因为可能同一个key在一段时间内反复被设置数据，其实只需要保持最新的数据指令即可，这样就可以使日志文件大大减少，但是即便是可以减少，恢复时如果一条一条执行指令，也是会比较慢的，虽然RDB会丢数据，但是恢复的时候却很快，那能不能结合2个的优点呢？<br>4.0之后Redis对AOF进行了优化，重写时会先进行一次RDB，后续再追加指令。<br>默认AOF文件是appendonly.aof，通过配置appendonly yes来启用，默认是no<br>AOF内容如下：<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211553164.png"><br>*3代表有3个指令组成，每个指令通过$n标识，n就是指令长度，如Set是$3</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>不建议使用RDB，会存在分钟级数据丢失<br>建议使用AOF，4.0以后还进行了优化，策略使用默认everysec即可。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 死磕Redis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> redis </tag>
+            
+            <tag> 分布式缓存 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>死磕Redis之数据类型</title>
       <link href="/2022/03/15/si-ke-redis-zhi-shu-ju-lei-xing/"/>
       <url>/2022/03/15/si-ke-redis-zhi-shu-ju-lei-xing/</url>
