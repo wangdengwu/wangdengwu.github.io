@@ -571,7 +571,7 @@ zset<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 <li>flags:标识类型</li>
 <li>buf[]:字符数组<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181424818.png"><br>在sdshdr5中将类型放到了flags的前3个字节中（3个字节能保存6种类型，所以3个字节足够了），后5个字节用来保存字符的长度。因为sdshdr5取消了alloc字段，因此也不会进行空间预分配<br>当存储的val为数字类型时，则直接使用整数来保存这个字符串，也就是redisObject里的属性val，直接存数字，这也是type是int的由来。<br>当字符串的长度小于等于44字节时，redisObject和sds一起分配内存。当字符串大于44字节时，才对redisObject分配一次内存，对sds分配一次内存<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181527532.png"></li>
 </ul>
-<h5 id="为什么以44字节为界限？"><a href="#为什么以44字节为界限？" class="headerlink" title="为什么以44字节为界限？"></a>为什么以44字节为界限？</h5><p>redisObject：16个字节 SDS：sdshdr8（3个字节）+ SDS 字符数组（N字节 + \0结束符 1个字节）<br>Redis规定嵌入式字符串最大以64字节存储，所以N=64-16-3-1=44</p>
+<h5 id="为什么以44字节为界限？"><a href="#为什么以44字节为界限？" class="headerlink" title="为什么以44字节为界限？"></a>为什么以44字节为界限？</h5><p>redisObject：16个字节<br>SDS：sdshdr8（3个字节）+ SDS 字符数组（N字节 + \0结束符 1个字节）<br>Redis规定嵌入式字符串最大以64字节存储，所以N=64-16-3-1=44 </p>
 <h5 id="为什么嵌入式字符串最大以64字节存储？"><a href="#为什么嵌入式字符串最大以64字节存储？" class="headerlink" title="为什么嵌入式字符串最大以64字节存储？"></a>为什么嵌入式字符串最大以64字节存储？</h5><p>因为在x86体系下，一般的缓存行大小是63字节，redis能一次加载完成</p>
 <pre class="line-numbers language-none"><code class="language-none">127.0.0.1:6379&gt; SET hello world
 OK
@@ -607,8 +607,8 @@ OK
 <h3 id="zset类型"><a href="#zset类型" class="headerlink" title="zset类型"></a>zset类型</h3><p>zset当元素较少时会使用ziplist来存储<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181557617.png"><br>zset当元素较多时使用dict+skiplist来存储<br>dict保存了数据到分数的映射关系，skiplist用来根据分数查询数据<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181559381.png"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
 <li>Redis对存储整数友好，可以压缩内存使用且存取效率高</li>
-<li>尽量使用短Key，不要超过44长度，否则会使用raw带来额外存取操作，使用数字类型效率最高。</li>
-<li>设置maxmemory，其容量最好不要超过最大物理内存的1/2，防止rdb时子进程写快照时的内存暴涨，即便停用rdb，使用slave时也会有一次rdb同步，导致内存暴涨，建议一个master不要超过2个slave。</li>
+<li>String不超过44长度性能最优，否则会使用raw带来额外存取操作，使用数字类型效率最高。</li>
+<li>设置maxmemory，防止rdb时子进程写快照时的内存暴涨，即便停用rdb，使用slave时也会有一次rdb同步，导致内存暴涨，建议一个master不要超过2个slave。</li>
 <li>设置内存淘汰策略，防止内存不够导致的异常</li>
 <li>避免大KEY，hashtable结构遍历很耗时，尽量使用scan获取大量数据，而不是getall</li>
 </ul>
