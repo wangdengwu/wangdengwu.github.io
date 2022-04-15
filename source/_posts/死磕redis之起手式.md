@@ -1,5 +1,5 @@
 ---
-title: 死磕redis之起手式
+title: 死磕Redis之起手式
 author: 王登武
 date: 2022-03-11 17:09:53
 categories:
