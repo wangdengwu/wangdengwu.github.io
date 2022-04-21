@@ -4,9 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="死磕Redis之持久化, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
-    <meta name="description" content="Redis持久化Redis实现持久化有2种方式，全量快照RDB和追加日志AOF。
-RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时会导致分钟级别以上的数据缺失。可以通过配置save “”来禁用。RDB的原理就是把内存全量数据">
+    <meta name="keywords" content="Redis 6.2 使用自签名tls实现加密传输, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
+    <meta name="description" content="Redis加密传输Redis 6.0开始支持tls加密传输，最近刚好要支持，因此需要搭建一套支持加密的Redis环境，于是打算使用自签名来做，但是使用的过程中遇到一些问题，打算记录下来，以方便可能有人也遇到同样的问题。
+使用smallste">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +18,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>死磕Redis之持久化 | 武码公社</title>
+    <title>Redis 6.2 使用自签名tls实现加密传输 | 武码公社</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -288,12 +288,12 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">死磕Redis之持久化</h1>
+                    <h1 class="description center-align post-title">Redis 6.2 使用自签名tls实现加密传输</h1>
                 </div>
             </div>
         </div>
@@ -413,8 +413,8 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                                 <span class="chip bg-color">redis</span>
                             </a>
                         
-                            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
-                                <span class="chip bg-color">分布式缓存</span>
+                            <a href="/tags/tls/">
+                                <span class="chip bg-color">tls</span>
                             </a>
                         
                     </div>
@@ -438,7 +438,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-21
+                    2022-04-21
                 </div>
                 
 
@@ -447,7 +447,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    819
+                    1.9k
                 </div>
                 
 
@@ -477,18 +477,213 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h3><p>Redis实现持久化有2种方式，全量快照RDB和追加日志AOF。</p>
-<h4 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h4><p>RDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时会导致分钟级别以上的数据缺失。<br>可以通过配置save “”来禁用。<br>RDB的原理就是把内存全量数据写到文件里，采用压缩数据的方式，所以快照文件大小会比较小。<br>可以使用save阻塞主线程的方式，也可以使用bgsave命令异步执行。<br>也可以自动执行保存快照，通过配置save 300 100来自动执行，300代表300秒，100代表100次改动，任何一个达到就会触发。<br>另外RDB不适合频繁写入，尤其是内存数据比较多的情况下，会导致磁盘IO压力比较大，可能这次还没全量写完，下次就又触发了，这也是不推荐使用RDB的原因，同时子进程虽然异步写，但是由于WOC（write on copy）的机制，也会导致内存暴涨，容易在内存吃紧的时候，导致不可用。</p>
-<h4 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h4><p>AOF采用追加指令的方式写日志，采用的是写后日志，即先写内存，再写日志，和（Write Ahead Log）WAL相反。<br>为什么采用后写呢？因为可以避免指令检查，先写内存成功则代表指令是合法的，而且也不会阻塞当前的「写」指令执行。</p>
-<h4 id="写回策略"><a href="#写回策略" class="headerlink" title="写回策略"></a>写回策略</h4><p>AOF可以配置写回策略，即频率和是否阻塞，通过配置appendfsync，一共有3个选项：always，everysec，no</p>
-<ul>
-<li>always：同步写回，写指令执行完毕立马将 aof_buf缓冲区中的内容刷写到 AOF 文件。</li>
-<li>everysec：每秒写回，写指令执行完，日志只会写到 AOF 文件缓冲区，每隔一秒就把缓冲区内容同步到磁盘。</li>
-<li>no： 操作系统控制，写执行执行完毕，把日志写到 AOF 文件内存缓冲区，由操作系统决定何时刷写到磁盘。</li>
-</ul>
-<p>推荐使用everysec</p>
-<h4 id="AOF日志过大怎么办？"><a href="#AOF日志过大怎么办？" class="headerlink" title="AOF日志过大怎么办？"></a>AOF日志过大怎么办？</h4><p>既然是追加，那难免日志会越来越大，日志过大会导致写性能越来越差，甚至导致磁盘不足等风险。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211549622.png"><br>AOF采用重写机制来优化日志，rewrite即将日志内容合并，因为可能同一个key在一段时间内反复被设置数据，其实只需要保持最新的数据指令即可，这样就可以使日志文件大大减少，但是即便是可以减少，恢复时如果一条一条执行指令，也是会比较慢的，虽然RDB会丢数据，但是恢复的时候却很快，那能不能结合2个的优点呢？<br>4.0之后Redis对AOF进行了优化，重写时会先进行一次RDB，后续再追加指令。<br>默认AOF文件是appendonly.aof，通过配置appendonly yes来启用，默认是no<br>AOF内容如下：<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211553164.png"><br>*3代表有3个指令组成，每个指令通过$n标识，n就是指令长度，如Set是$3</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>不建议使用RDB，会存在分钟级数据丢失<br>建议使用AOF，4.0以后还进行了优化，策略使用默认everysec即可。</p>
+                <h3 id="Redis加密传输"><a href="#Redis加密传输" class="headerlink" title="Redis加密传输"></a>Redis加密传输</h3><p>Redis 6.0开始支持tls加密传输，最近刚好要支持，因此需要搭建一套支持加密的Redis环境，于是打算使用自签名来做，但是使用的过程中遇到一些问题，打算记录下来，以方便可能有人也遇到同样的问题。</p>
+<h3 id="使用smallstep生成自签名根证书"><a href="#使用smallstep生成自签名根证书" class="headerlink" title="使用smallstep生成自签名根证书"></a>使用<a target="_blank" rel="noopener" href="https://smallstep.com/">smallstep</a>生成自签名根证书</h3><p>为了方便生成多个中间证书，首先生成自己的自签名根证书，然后使用根证书生成更多的中间证书。比如先生成dengwu.wang的根证书，然后再生成master.dengwu.wang，slave1.dengwu.wang，slave2.dengwu.wang等等子域名证书。<br>按照官方文档，先安装，mac用户可以使用<code>brew install step</code>直接安装，centos可以直接下载二进制文件安装，如下：<br>先安装step</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">wget</span> -O step.tar.gz https://dl.step.sm/gh-release/cli/docs-ca-install/v0.19.0/step_linux_0.19.0_amd64.tar.gz
+<span class="token function">tar</span> -xf step.tar.gz
+<span class="token function">sudo</span> <span class="token function">cp</span> step_0.19.0/bin/step /usr/bin<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>再安装step-ca</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">wget</span> -O step-ca.tar.gz https://dl.step.sm/gh-release/certificates/docs-ca-install/v0.19.0/step-ca_linux_0.19.0_amd64.tar.gz
+<span class="token function">tar</span> -xf step-ca.tar.gz
+<span class="token function">sudo</span> <span class="token function">cp</span> step-ca_0.19.0/bin/step-ca /usr/bin<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>由于dl.step.sm本身的证书不被wget信任，如果下载遇到安全提示，加上–no-check-certificate即可<br>下载完成后，我们就可以生成根证书了，先执行<code>step ca init</code></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ step ca init
+
+✔ What would you like to name your new PKI? <span class="token punctuation">(</span>e.g. Smallstep<span class="token punctuation">)</span>: Example Inc.
+✔ What DNS names or IP addresses would you like to <span class="token function">add</span> to your new CA? <span class="token punctuation">(</span>e.g. ca.smallstep.com<span class="token punctuation">[</span>,1.1.1.1,etc.<span class="token punctuation">]</span><span class="token punctuation">)</span>: localhost
+✔ What address will your new CA listen at? <span class="token punctuation">(</span>e.g. :443<span class="token punctuation">)</span>: <span class="token number">127.0</span>.0.1:8443
+✔ What would you like to name the first provisioner <span class="token keyword">for</span> your new CA? <span class="token punctuation">(</span>e.g. you@smallstep.com<span class="token punctuation">)</span>: bob@example.com
+✔ What <span class="token keyword">do</span> you want your password to be? <span class="token punctuation">[</span>leave empty and we will generate one<span class="token punctuation">]</span>: abc123
+
+Generating root certificate<span class="token punctuation">..</span>.
+all done<span class="token operator">!</span>
+
+Generating intermediate certificate<span class="token punctuation">..</span>.
+all done<span class="token operator">!</span>
+
+✔ Root certificate: /Users/bob/.step/certs/root_ca.crt
+✔ Root private key: /Users/bob/.step/secrets/root_ca_key
+✔ Root fingerprint: 702a094e239c9eec6f0dcd0a5f65e595bf7ed6614012825c5fe3d1ae1b2fd6ee
+✔ Intermediate certificate: /Users/bob/.step/certs/intermediate_ca.crt
+✔ Intermediate private key: /Users/bob/.step/secrets/intermediate_ca_key
+✔ Default configuration: /Users/bob/.step/config/defaults.json
+✔ Certificate Authority configuration: /Users/bob/.step/config/ca.json
+
+Your PKI is ready to go.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>按照提示按需输入即可，一定要记得设置密码，后续还需要使用。<br>下面启动根证书服务</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ step-ca <span class="token variable"><span class="token variable">$(</span>step path<span class="token variable">)</span></span>/config/ca.json
+
+Please enter the password to decrypt /Users/bob/.step/secrets/intermediate_ca_key: abc123
+
+<span class="token number">2022</span>/04/21 <span class="token number">21</span>:28:58 Serving HTTPS on <span class="token number">127.0</span>.0.1:8443 <span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="通过根证书服务器生成中间证书"><a href="#通过根证书服务器生成中间证书" class="headerlink" title="通过根证书服务器生成中间证书"></a>通过根证书服务器生成中间证书</h3><p>启动成功后，我们就可以导入ca证书</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ step ca bootstrap --ca-url <span class="token punctuation">[</span>CA URL<span class="token punctuation">]</span> --fingerprint <span class="token punctuation">[</span>CA fingerprint<span class="token punctuation">]</span>
+The root certificate has been saved <span class="token keyword">in</span> /home/alice/.step/certs/root_ca.crt.
+Your configuration has been saved <span class="token keyword">in</span> /home/alice/.step/config/defaults.json.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>CA URL替换成你的ca服务地址，比如可能是127.0.0.1:8443，CA fingerprint就是生成根证书的时候的Root fingerprint<br>如果找不到了，可以执行<code>step certificate fingerprint $(step path)/certs/root_ca.crt</code>获取<br>导入成功之后，还需要安装一下，让本地电脑信任，否则会导致本地发送请求连接失败</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">➜  ~ step certificate <span class="token function">install</span> <span class="token variable"><span class="token variable">$(</span>step path<span class="token variable">)</span></span>/certs/root_ca.crt
+Password:
+Certificate /Users/wangdengwu/.step/certs/root_ca.crt has been installed.
+X.509v3 Root CA Certificate <span class="token punctuation">(</span>ECDSA P-256<span class="token punctuation">)</span> <span class="token punctuation">[</span>Serial: <span class="token number">2527</span><span class="token punctuation">..</span>.6639<span class="token punctuation">]</span>
+  Subject:     dengwu.wang Root CA
+  Issuer:      dengwu.wang Root CA
+  Valid from:  <span class="token number">2022</span>-04-21T04:45:52Z
+          to:  <span class="token number">2032</span>-04-18T04:45:52Z<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Mac的话，就可以在钥匙串访问里看到了<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202204212143947.png"><br>下面，我们就可以向根证书服务申请中间证书了。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">step ca certificate <span class="token string">"redis.dengwu.wang"</span> server.crt server.key<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>获取ca证书</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">step ca root ca.crt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这样当前文件夹下就有了server.crt,server.key和ca.crt</p>
+<h3 id="使用docker启动Redis服务"><a href="#使用docker启动Redis服务" class="headerlink" title="使用docker启动Redis服务"></a>使用docker启动Redis服务</h3><p>为了方便，我们使用docker-compose来启动服务</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">"3.9"</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">master</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> <span class="token string">"bitnami/redis:6.2.6"</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> <span class="token string">"master"</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"../tls:/opt/redis/certs"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> TZ=Asia/Shanghai
+      <span class="token punctuation">-</span> REDIS_REPLICATION_MODE=master
+      <span class="token punctuation">-</span> REDIS_PASSWORD=hello1234
+      <span class="token punctuation">-</span> REDIS_TLS_ENABLED=yes
+      <span class="token punctuation">-</span> REDIS_TLS_AUTH_CLIENTS=no
+      <span class="token punctuation">-</span> REDIS_TLS_CERT_FILE=/opt/redis/certs/redis.crt
+      <span class="token punctuation">-</span> REDIS_TLS_KEY_FILE=/opt/redis/certs/redis.key
+      <span class="token punctuation">-</span> REDIS_TLS_CA_FILE=/opt/redis/certs/redisCA.crt
+      <span class="token punctuation">-</span> REDIS_TLS_PORT=6380
+    <span class="token key atrule">command</span><span class="token punctuation">:</span> /opt/bitnami/scripts/redis/run.sh <span class="token punctuation">-</span><span class="token punctuation">-</span>maxmemory 100mb <span class="token punctuation">-</span><span class="token punctuation">-</span>tls<span class="token punctuation">-</span>replication yes <span class="token punctuation">-</span><span class="token punctuation">-</span>tls<span class="token punctuation">-</span>key<span class="token punctuation">-</span>file<span class="token punctuation">-</span>pass hello1234
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"6379:6379"</span>
+      <span class="token punctuation">-</span> <span class="token string">"6380:6380"</span>
+  <span class="token key atrule">slave</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> <span class="token string">"bitnami/redis:6.2.6"</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> <span class="token string">"slave"</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"../tls:/opt/redis/certs"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> TZ=Asia/Shanghai
+      <span class="token punctuation">-</span> REDIS_REPLICATION_MODE=slave
+      <span class="token punctuation">-</span> REDIS_MASTER_HOST=master
+      <span class="token punctuation">-</span> REDIS_MASTER_PORT_NUMBER=6380
+      <span class="token punctuation">-</span> REDIS_MASTER_PASSWORD=hello1234
+      <span class="token punctuation">-</span> REDIS_PASSWORD=hello1234
+      <span class="token punctuation">-</span> REDIS_TLS_ENABLED=yes
+      <span class="token punctuation">-</span> REDIS_TLS_AUTH_CLIENTS=no
+      <span class="token punctuation">-</span> REDIS_TLS_CERT_FILE=/opt/redis/certs/redis.crt
+      <span class="token punctuation">-</span> REDIS_TLS_KEY_FILE=/opt/redis/certs/redis.key
+      <span class="token punctuation">-</span> REDIS_TLS_CA_FILE=/opt/redis/certs/redisCA.crt
+      <span class="token punctuation">-</span> REDIS_TLS_PORT=6380
+    <span class="token key atrule">command</span><span class="token punctuation">:</span> /opt/bitnami/scripts/redis/run.sh <span class="token punctuation">-</span><span class="token punctuation">-</span>maxmemory 100mb <span class="token punctuation">-</span><span class="token punctuation">-</span>tls<span class="token punctuation">-</span>replication yes <span class="token punctuation">-</span><span class="token punctuation">-</span>tls<span class="token punctuation">-</span>key<span class="token punctuation">-</span>file<span class="token punctuation">-</span>pass hello1234
+    <span class="token key atrule">expose</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"6379"</span>
+      <span class="token punctuation">-</span> <span class="token string">"6380"</span>
+    <span class="token key atrule">depends_on</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>需要映射tls文件目录，以便redis启动的时候能找到证书，目录结构如下<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202204212151449.png"><br>我们现在可以使用docker-compose up -d来启动了，如果没啥意外的话，就启动成功了。<br>下面，我们使用redis-cli来访问一下，由于证书是绑定域名的，如果我们直接访问127.0.0.1的话，是访问失败的，所以还需要修改一下hosts文件绑定域名<code>127.0.0.1 redis.dengwu.wang</code><br>绑定完后，我们来连接一下</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">➜  redis-cli -h redis.dengwu.wang -p <span class="token number">6380</span> --tls --cacert ca.crt
+redis.dengwu.wang:638<span class="token operator"><span class="token file-descriptor important">0</span>></span> AUTH hello1234
+OK
+redis.dengwu.wang:638<span class="token operator"><span class="token file-descriptor important">0</span>></span> info replication
+<span class="token comment"># Replication</span>
+role:master
+connected_slaves:1
+slave0:ip<span class="token operator">=</span><span class="token number">172.30</span>.0.2,port<span class="token operator">=</span><span class="token number">6380</span>,state<span class="token operator">=</span>online,offset<span class="token operator">=</span><span class="token number">1120</span>,lag<span class="token operator">=</span><span class="token number">1</span>
+master_failover_state:no-failover
+master_replid:6c3011ca5166f406cb9e9e7ac61bf5854c1f61b5
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:1120
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:1120
+redis.dengwu.wang:638<span class="token operator"><span class="token file-descriptor important">0</span>></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>至此自签名的Redis主从就搭建完毕，使用ca证书即可访问</p>
+<h3 id="使用Redis的Java客户端jedis等访问"><a href="#使用Redis的Java客户端jedis等访问" class="headerlink" title="使用Redis的Java客户端jedis等访问"></a>使用Redis的Java客户端jedis等访问</h3><p>如果你使用Java来访问的话，由于jre的本地ca库并没有当前ca证书，所以还需要导入java的证书库<br>我们先使用keytool验证一下当前的ca根证书是否合法</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">keytool -v -printcert -file ca.crt
+所有者: <span class="token assign-left variable">CN</span><span class="token operator">=</span>dengwu.wang Root CA, <span class="token assign-left variable">O</span><span class="token operator">=</span>dengwu.wang
+发布者: <span class="token assign-left variable">CN</span><span class="token operator">=</span>dengwu.wang Root CA, <span class="token assign-left variable">O</span><span class="token operator">=</span>dengwu.wang
+序列号: be26c0031e2f5b03c517dd5ec02a830f
+有效期为 Thu Apr <span class="token number">21</span> <span class="token number">12</span>:45:52 CST <span class="token number">2022</span> 至 Sun Apr <span class="token number">18</span> <span class="token number">12</span>:45:52 CST <span class="token number">2032</span>
+证书指纹:
+	 MD5:  BD:0A:F7:2B:44:A7:27:3E:6F:6E:82:CC:3C:98:69:56
+	 SHA1: <span class="token number">51</span>:89:F7:4E:7C:3E:AD:DC:92:14:00:28:87:E0:23:E1:EA:D2:88:AC
+	 SHA256: 2D:06:83:E4:28:D5:E5:8C:2E:A9:DF:B0:24:37:0F:B6:46:7A:E8:7B:17:EA:D6:88:15:4F:BA:3F:84:BC:0F:DA
+签名算法名称: SHA256withECDSA
+主体公共密钥算法: <span class="token number">256</span> 位 EC 密钥
+版本: <span class="token number">3</span>
+
+扩展:
+
+<span class="token comment">#1: ObjectId: 2.5.29.19 Criticality=true</span>
+BasicConstraints:<span class="token punctuation">[</span>
+  CA:true
+  PathLen:1
+<span class="token punctuation">]</span>
+
+<span class="token comment">#2: ObjectId: 2.5.29.15 Criticality=true</span>
+KeyUsage <span class="token punctuation">[</span>
+  Key_CertSign
+  Crl_Sign
+<span class="token punctuation">]</span>
+
+<span class="token comment">#3: ObjectId: 2.5.29.14 Criticality=false</span>
+SubjectKeyIdentifier <span class="token punctuation">[</span>
+KeyIdentifier <span class="token punctuation">[</span>
+0000: <span class="token number">79</span> 5D 02 C3 B7 0E DC <span class="token number">97</span>   <span class="token number">56</span> A6 5A <span class="token number">30</span> <span class="token number">30</span> <span class="token number">30</span> <span class="token number">63</span> <span class="token number">93</span>  y<span class="token punctuation">]</span><span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>V.Z000c.
+0010: <span class="token number">76</span> <span class="token number">33</span> 9A <span class="token number">97</span>                                        v3<span class="token punctuation">..</span>
+<span class="token punctuation">]</span>
+<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>说明格式没问题，下面导入java的ca库</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo keytool -import -alias dengwu.wang -keystore $JAVA_HOME&#x2F;jre&#x2F;lib&#x2F;security&#x2F;cacerts -storepass changeit -file ca.crt
+Password:
+所有者: CN&#x3D;dengwu.wang Root CA, O&#x3D;dengwu.wang
+发布者: CN&#x3D;dengwu.wang Root CA, O&#x3D;dengwu.wang
+序列号: be26c0031e2f5b03c517dd5ec02a830f
+有效期为 Thu Apr 21 12:45:52 CST 2022 至 Sun Apr 18 12:45:52 CST 2032
+证书指纹:
+	 MD5:  BD:0A:F7:2B:44:A7:27:3E:6F:6E:82:CC:3C:98:69:56
+	 SHA1: 51:89:F7:4E:7C:3E:AD:DC:92:14:00:28:87:E0:23:E1:EA:D2:88:AC
+	 SHA256: 2D:06:83:E4:28:D5:E5:8C:2E:A9:DF:B0:24:37:0F:B6:46:7A:E8:7B:17:EA:D6:88:15:4F:BA:3F:84:BC:0F:DA
+签名算法名称: SHA256withECDSA
+主体公共密钥算法: 256 位 EC 密钥
+版本: 3
+
+扩展:
+
+#1: ObjectId: 2.5.29.19 Criticality&#x3D;true
+BasicConstraints:[
+  CA:true
+  PathLen:1
+]
+
+#2: ObjectId: 2.5.29.15 Criticality&#x3D;true
+KeyUsage [
+  Key_CertSign
+  Crl_Sign
+]
+
+#3: ObjectId: 2.5.29.14 Criticality&#x3D;false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 79 5D 02 C3 B7 0E DC 97   56 A6 5A 30 30 30 63 93  y]......V.Z000c.
+0010: 76 33 9A 97                                        v3..
+]
+]
+
+是否信任此证书? [否]:  是
+证书已添加到密钥库中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行<code>keytool -list -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit |grep dengwu.wang</code>搜索一下<br>dengwu.wang, 2022-4-21, trustedCertEntry,<br>说明已经成功，我们使用jedis来试一下</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test_redis_tls_with_jedis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"rediss://redis.dengwu.wang:6380"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jedis<span class="token punctuation">.</span><span class="token function">auth</span><span class="token punctuation">(</span><span class="token string">"hello1234"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jedis<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">,</span><span class="token string">"1"</span><span class="token punctuation">,</span> <span class="token class-name">SetParams</span><span class="token punctuation">.</span><span class="token function">setParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ex</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行成功。</p>
 
                 
             </div>
@@ -515,7 +710,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dengwu.wang/2022/03/21/si-ke-redis-zhi-chi-jiu-hua/">https://dengwu.wang/2022/03/21/si-ke-redis-zhi-chi-jiu-hua/</a>
+                    <a href="https://dengwu.wang/2022/04/21/redis-6-2-shi-yong-zi-qian-ming-tls-shi-xian-jia-mi-chuan-shu/">https://dengwu.wang/2022/04/21/redis-6-2-shi-yong-zi-qian-ming-tls-shi-xian-jia-mi-chuan-shu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -557,8 +752,8 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                                     <span class="chip bg-color">redis</span>
                                 </a>
                             
-                                <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
-                                    <span class="chip bg-color">分布式缓存</span>
+                                <a href="/tags/tls/">
+                                    <span class="chip bg-color">tls</span>
                                 </a>
                             
                         </div>
@@ -742,9 +937,10 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2022/04/21/redis-6-2-shi-yong-zi-qian-ming-tls-shi-xian-jia-mi-chuan-shu/">
                     <div class="card-image">
@@ -762,9 +958,9 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-04-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-04-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -777,6 +973,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -799,13 +996,13 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/15/si-ke-redis-zhi-shu-ju-lei-xing/">
+                <a href="/2022/03/21/si-ke-redis-zhi-chi-jiu-hua/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="死磕Redis之数据类型">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="死磕Redis之持久化">
                         
-                        <span class="card-title">死磕Redis之数据类型</span>
+                        <span class="card-title">死磕Redis之持久化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -816,7 +1013,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-15
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-21
                             </span>
                         <span class="publish-author">
                             
