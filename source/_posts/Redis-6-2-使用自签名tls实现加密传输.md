@@ -274,3 +274,122 @@ public void test_redis_tls_with_jedis(){
 }
 ```
 执行成功。
+
+### 单元测试
+有时候我们需要执行单元测试，如果是本地跑，可以方便的导入证书和修改hosts，但是有时候测试需要在cd服务器上跑，环境不受控制，那如何解决域名和证书问题呢？ 
+答案就是fake或mock，我们可以通过修改jdk运行时的私有数据，来达到绑定域名和导入证书的目的。
+#### 解决域名问题
+
+``` java
+import com.google.common.collect.ImmutableMap;
+import org.testcontainers.shaded.org.apache.commons.lang3.reflect.FieldUtils;
+import sun.net.spi.nameservice.NameService;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Map;
+
+@SuppressWarnings("all")
+public final class MockNameService implements NameService {
+    private final String local = "127.0.0.1";
+    private final Map<String, String> mockHost = ImmutableMap
+            .<String, String>builder()
+            .put("master.dengwu.wang", local)
+            .put("slave1.dengwu.wang", local)
+            .put("slave2.dengwu.wang", local)
+            .build();
+
+    public static void mockHosts() {
+        try {
+            //通过反射拿到nameService列表
+            List<NameService> nameServices =
+                    (List<sun.net.spi.nameservice.NameService>)
+                            FieldUtils.readStaticField(InetAddress.class, "nameServices", true);
+            //加入自己的mockNameService
+            nameServices.add(new MockNameService());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public InetAddress[] lookupAllHostAddr(String paramString) throws UnknownHostException {
+        //mock逻辑
+        if (mockHost.keySet().contains(paramString)) {
+            final byte[] arrayOfByte = sun.net.util.IPAddressUtil.textToNumericFormatV4(mockHost.get(paramString));
+            final InetAddress address = InetAddress.getByAddress(paramString, arrayOfByte);
+            return new InetAddress[]{address};
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getHostByAddr(byte[] paramArrayOfByte) throws UnknownHostException {
+        throw new UnknownHostException();
+    }
+}
+```
+#### 解决JDK的根证书问题
+
+``` java
+import org.testcontainers.shaded.org.apache.commons.lang3.reflect.FieldUtils;
+import sun.security.ssl.SSLContextImpl;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+public final class FakeX509TrustManager {
+
+    private static final String DOCKER_TLS_KEYSTORE_JKS = "docker/tls/cacerts";
+    public static final String KEYSTORE_PASSWORD = "changeit";
+
+    public static void fakeTrustManager() {
+        try (InputStream keyStoreInputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(DOCKER_TLS_KEYSTORE_JKS)) {
+            SSLContext defaultSSLContext = SSLContext.getDefault();
+            SSLContextImpl sslContext = (SSLContextImpl) FieldUtils.readField(defaultSSLContext, "contextSpi", true);
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(keyStoreInputStream, KEYSTORE_PASSWORD.toCharArray());
+            tmf.init(ks);
+            TrustManager[] trustManagers = tmf.getTrustManagers();
+            FieldUtils.writeField(sslContext, "trustManager", trustManagers[0], true);
+        } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | IOException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+思路就是将之前已经导入CA证书的本地JDK的KeyStore复用，但是JDK没有暴露对应的API，那就只能通过反射拿到，注意JDK的KeyStore默认密码是changeit，格式是JKS的
+#### 使用
+只需要在单元测试的类里，静态调用一下就可以了
+``` java
+static {
+  MockNameService.mockHosts();
+  FakeX509TrustManager.fakeTrustManager();
+}
+```
+
+#### Redis环境问题
+如果有现成的Redis环境，则可以跑集成测试，但是如果没有，那使用docker是个不错的选择，但是单元测试往往需要启动时初始化环境，跑完就销毁即可，那如何将docker和Junit结合呢？  
+可以使用testcontainers，结合docker-compose文件，很方便的测试之前启动docker环境，测试结束销毁docker容器
+``` java
+@Testcontainers
+@IfProfileValue(name = "spring.profiles.active", value = "readwrite")
+public class ClientReadWriteTests {
+  @ClassRule
+  @Container
+  public static final DockerComposeContainer masterSlaves = new DockerComposeContainer(new File(masterDockerComposeFile))
+          .withLocalCompose(true);
+}
+```
+另外还可以通过profile来隔离不同的测试场景，比如主从场景，集群场景，读写分离场景等等
