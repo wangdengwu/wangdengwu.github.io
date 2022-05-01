@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="死磕Redis之起手式, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
-    <meta name="description" content="死磕Redis系列Redis作为集中式缓存（也支持分布式架构），不管是单体应用还是分布式微服务都离不开，所以对Redis进行深入了解则显得额外重要，所以打算做一个死磕Redis系列，从浅到深的系统介绍一下Redis，当然这也是很好的对知识的">
+    <meta name="keywords" content="使用正则分组匹配字符串, Java，Flutter，Dart，架构，编程，技术分享，读书分享">
+    <meta name="description" content="字符串匹配假设有这样一个Redis连接字符串:”redis://&amp;#x68;&amp;#101;&amp;#x6c;&amp;#x6c;&amp;#x6f;&amp;#49;&amp;#x32;&amp;#x33;&amp;#x34;&amp;#x40;&amp;#109;&amp;#x61;&amp;#115;&amp;#116;&amp;#101">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>死磕Redis之起手式 | 武码公社</title>
+    <title>使用正则分组匹配字符串 | 武码公社</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">死磕Redis之起手式</h1>
+                    <h1 class="description center-align post-title">使用正则分组匹配字符串</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/redis/">
-                                <span class="chip bg-color">redis</span>
-                            </a>
-                        
-                            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
-                                <span class="chip bg-color">分布式缓存</span>
+                            <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                                <span class="chip bg-color">正则匹配</span>
                             </a>
                         
                     </div>
@@ -424,8 +420,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%AD%BB%E7%A3%95Redis/" class="post-category">
-                                死磕Redis
+                            <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="post-category">
+                                程序设计
                             </a>
                         
                     </div>
@@ -437,21 +433,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-11
+                    2022-05-01
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-24
+                    2022-05-01
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.1k
+                    646
                 </div>
                 
 
@@ -481,54 +477,39 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="死磕Redis系列"><a href="#死磕Redis系列" class="headerlink" title="死磕Redis系列"></a>死磕Redis系列</h3><p>Redis作为集中式缓存（也支持分布式架构），不管是单体应用还是分布式微服务都离不开，所以对Redis进行深入了解则显得额外重要，所以打算做一个死磕Redis系列，从浅到深的系统介绍一下Redis，当然这也是很好的对知识的梳理和再学习的机会，因为最好的学习方式就是能清晰的讲给别人听。<br>我个人认为学习一项知识或者技术，大致分为三个阶段，</p>
+                <h3 id="字符串匹配"><a href="#字符串匹配" class="headerlink" title="字符串匹配"></a>字符串匹配</h3><p>假设有这样一个Redis连接字符串:”redis://<a href="mailto:&#x68;&#101;&#x6c;&#x6c;&#x6f;&#49;&#x32;&#x33;&#x34;&#x40;&#109;&#x61;&#115;&#116;&#101;&#114;&#46;&#x64;&#101;&#110;&#103;&#x77;&#117;&#46;&#119;&#97;&#110;&#x67;">&#x68;&#101;&#x6c;&#x6c;&#x6f;&#49;&#x32;&#x33;&#x34;&#x40;&#109;&#x61;&#115;&#116;&#101;&#114;&#46;&#x64;&#101;&#110;&#103;&#x77;&#117;&#46;&#119;&#97;&#110;&#x67;</a>:6379”，我们需要提取其中的redis部分和hello1234,以及host和port，如何获取呢？首先想到的是，可以通过split分隔，然后提取其中每个部分，这样做也可以，但是整个操作是基于命令式的，不够语义化，导致理解起来需要了解每个步骤，而且如果增加内容，可能需要对整个操作进行修改，比如可能需要解析多个服务器地址:”redis://<a href="mailto:&#x68;&#x65;&#x6c;&#x6c;&#x6f;&#x31;&#50;&#51;&#x34;&#x40;&#109;&#97;&#115;&#x74;&#101;&#x72;&#x2e;&#100;&#x65;&#x6e;&#x67;&#119;&#117;&#46;&#119;&#x61;&#110;&#x67;">&#x68;&#x65;&#x6c;&#x6c;&#x6f;&#x31;&#50;&#51;&#x34;&#x40;&#109;&#97;&#115;&#x74;&#101;&#x72;&#x2e;&#100;&#x65;&#x6e;&#x67;&#119;&#117;&#46;&#119;&#x61;&#110;&#x67;</a>:6379,slave1.dengwu.wang:6380”。</p>
+<h3 id="使用正则分组"><a href="#使用正则分组" class="headerlink" title="使用正则分组"></a>使用正则分组</h3><p>正则表达式里，有分组的概念，即通过()的方式，可以分组匹配，这样通过分组，就可以将一个长字符串，分割成语义明确的子字符串，方便匹配。<br>比如上面的字符串：”redis://<a href="mailto:&#104;&#101;&#x6c;&#108;&#111;&#49;&#50;&#x33;&#x34;&#x40;&#x6d;&#97;&#115;&#x74;&#101;&#x72;&#46;&#x64;&#101;&#x6e;&#103;&#119;&#x75;&#46;&#x77;&#x61;&#x6e;&#x67;">&#104;&#101;&#x6c;&#108;&#111;&#49;&#50;&#x33;&#x34;&#x40;&#x6d;&#97;&#115;&#x74;&#101;&#x72;&#46;&#x64;&#101;&#x6e;&#103;&#119;&#x75;&#46;&#x77;&#x61;&#x6e;&#x67;</a>:6379,slave1.dengwu.wang:6380”,可以分成5个部分：</p>
 <ol>
-<li>熟练使用</li>
-<li>原理架构</li>
-<li>深入源码</li>
+<li>redis是协议分组，可能有redis,rediss,redis-cluster,rediss-cluster</li>
+<li>hello1234是密码分组，可能会有各种特殊字符，比如:@:,等等内容，你没办法限定密码设定里的字符内容</li>
+<li>master.dengwu.wang:6379,slave1.dengwu.wang:6380这部分统称为right部分分组，需要借助,分隔成host:port内容</li>
+<li>master.dengwu.wang部分是host分组</li>
+<li>6379是port分组</li>
 </ol>
-<p>首先需要先动手，先用起来，写写demo，做做项目，有一个大概的认知。<br>随着可以掌握大部分功能，就可以深入其原理和架构，了解其设计和思想是什么样的，这个时候就对其整体有了认知。<br>当有了全局和思想的掌握后，就可以深入细节，阅读源码则更能由表入里，完全掌握这项技术或中间件。<br>当然这三个部分是互相循环的，互为助推，随着熟练使用，就接触到一部分原理和架构，然后可能也会看一部分源码， 继而更有助于熟练使用，也能更理解原理和架构。就像下面这张图一样。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203111725715.jpg"></p>
-<h3 id="死磕Redis系列大纲"><a href="#死磕Redis系列大纲" class="headerlink" title="死磕Redis系列大纲"></a>死磕Redis系列大纲</h3><p>大概计划了一个大纲<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203111728829.png"><br>如果能写完死磕Redis系列，效果还不错的话，可能还会有《死磕Netty》《死磕Kotlin》《死磕Java并发》等等系列吧。</p>
-<h3 id="死磕Redis之起手式"><a href="#死磕Redis之起手式" class="headerlink" title="死磕Redis之起手式"></a>死磕Redis之起手式</h3><p>那么我们就正式进入死磕Redis系列的起手式。<br>不要小看起手式，陈氏太极拳里的起手式可以起到静气凝神，是为后续宜柔宜刚打下基础，也起了一个基调。</p>
-<h3 id="本地单机Redis"><a href="#本地单机Redis" class="headerlink" title="本地单机Redis"></a>本地单机Redis</h3><p>开始死磕Redis之前，我们首先需要有个Redis，那如何快速获取一个Redis呢？有2种方式，自己本地装一个，或者使用docker启动一个。<br>我推荐使用docker，因为简单方便，使用之后清理也方便，最重要的是不会污染你本地环境和端口。<br>首先我们先装一个<a target="_blank" rel="noopener" href="https://www.docker.com/get-started">docker desktop</a>，具体点击链接按照指引即可安装成功。<br>然后我们去DockerHub搜一下<a target="_blank" rel="noopener" href="https://hub.docker.com/_/redis?tab=tags">Redis</a>的镜像，点击链接即可跳转过去，Redis的版本很多，我们暂时选最新稳定版6.2.6。<br>启动Redis实例<code>docker run --name redis -p 127.0.0.1:6379:6379 -d redis:6.2.6</code>，运行<code>docker ps</code>就可以看到运行中的redis实例了。<br>如果本地没有安装redis，没有redis-cli工具，则可以使用<code>docker exec -it redis redis-cli</code>连到容器的redis，执行info命令就可以看到redis服务的信息了。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112301578.png"></p>
-<h3 id="spring-boot连接Redis"><a href="#spring-boot连接Redis" class="headerlink" title="spring boot连接Redis"></a>spring boot连接Redis</h3><p>我们首先可以使用<a target="_blank" rel="noopener" href="https://start.spring.io/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E9%AA%A8%E6%9E%B6%E7%A8%8B%E5%BA%8F">https://start.spring.io/创建一个骨架程序</a><br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112315606.png"><br>点击生成下载到本地后，使用IntelliJ打开<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112352611.png"><br>如果你按照上述步骤来动手实践的话，我希望你在demo文件夹下使用git init来初始化代码仓库，以方便对代码进行版本管理。</p>
-<h3 id="HelloRedis"><a href="#HelloRedis" class="headerlink" title="HelloRedis"></a>HelloRedis</h3><p>我们需要添加一些代码，设置Redis相关的配置，来执行HelloRedis的操作。<br>首先我们先在application.properties添加Redis连接信息</p>
-<pre class="line-numbers language-properties" data-language="properties"><code class="language-properties"><span class="token attr-name">spring.redis.host</span><span class="token punctuation">=</span><span class="token attr-value">127.0.0.1</span>
-<span class="token attr-name">spring.redis.port</span><span class="token punctuation">=</span><span class="token attr-value">6379</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>然后创建一个HelloRedisController来响应http，并对Redis进行操作</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">learn<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>controller</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Autowired</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>data<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>core<span class="token punctuation">.</span></span><span class="token class-name">StringRedisTemplate</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">GetMapping</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RequestMapping</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RequestParam</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>web<span class="token punctuation">.</span>bind<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RestController</span><span class="token punctuation">;</span>
-
-<span class="token comment">/**
- * @author wangdengwu
- */</span>
-<span class="token annotation punctuation">@RestController</span>
-<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/redis"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloRedisController</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> HELLO <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
-    <span class="token annotation punctuation">@Autowired</span>
-    <span class="token keyword">private</span> <span class="token class-name">StringRedisTemplate</span> stringRedisTemplate<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/hello"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">helloRedis</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>required <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>name <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> name<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token class-name">String</span> result <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>HELLO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">return</span> HELLO <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> result<span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-            stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>HELLO<span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<p>看下代码实现：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//定义protocol分组，使用?&lt;name>来命名分组</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> protocolGroup <span class="token operator">=</span> <span class="token string">"(?&lt;protocol>redis|rediss|redis-cluster|rediss-cluster)"</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> passwordGroup <span class="token operator">=</span> <span class="token string">"(?&lt;password>.*)"</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> rightGroup <span class="token operator">=</span> <span class="token string">"(?&lt;right>[\\w.:,?=]+)"</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> hostGroup <span class="token operator">=</span> <span class="token string">"(?&lt;host>.+)"</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> portGroup <span class="token operator">=</span> <span class="token string">"(?&lt;port>\\d+)"</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Pattern</span> patternAll <span class="token operator">=</span> <span class="token class-name">Pattern</span><span class="token punctuation">.</span><span class="token function">compile</span><span class="token punctuation">(</span>protocolGroup <span class="token operator">+</span> <span class="token string">"://"</span> <span class="token operator">+</span> passwordGroup <span class="token operator">+</span> <span class="token string">"@"</span> <span class="token operator">+</span> rightGroup<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Pattern</span> patternServer <span class="token operator">=</span> <span class="token class-name">Pattern</span><span class="token punctuation">.</span><span class="token function">compile</span><span class="token punctuation">(</span>hostGroup <span class="token operator">+</span> <span class="token string">":"</span> <span class="token operator">+</span> portGroup<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Matcher</span> matcherAll <span class="token operator">=</span> patternAll<span class="token punctuation">.</span><span class="token function">matcher</span><span class="token punctuation">(</span><span class="token string">"rediss://hello1234@master.dengwu.wang:6379,slave1.dengwu.wang:6380"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>matcherAll<span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> protocol <span class="token operator">=</span> matcherAll<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span><span class="token string">"protocol"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> password <span class="token operator">=</span> matcherAll<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> rightStr <span class="token operator">=</span> matcherAll<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span><span class="token string">"right"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> servers <span class="token operator">=</span> rightStr<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> server <span class="token operator">:</span> servers<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">Matcher</span> matcherServer <span class="token operator">=</span> patternServer<span class="token punctuation">.</span><span class="token function">matcher</span><span class="token punctuation">(</span>server<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>matcherServer<span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">String</span> host <span class="token operator">=</span> matcherCluster<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span><span class="token string">"host"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">String</span> port <span class="token operator">=</span> matcherCluster<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span><span class="token string">"port"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
         <span class="token punctuation">&#125;</span>
-        <span class="token keyword">return</span> HELLO <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> name<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>使用mvn spring-boot:run或者在IDE里启动DemoApplication<br>然后在浏览器里输入<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/redis/hello?name=redis">http://127.0.0.1:8080/redis/hello?name=redis</a><br>这样就将redis字符串存到了redis里，再执行<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/redis/hello%EF%BC%8C%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0hello">http://127.0.0.1:8080/redis/hello，就可以看到hello</a> redis了<br>也可以使用命令<code>docker exec -it redis redis-cli</code>连接到redis，执行<code>keys *</code>以及<code>get hello</code>和<code>type hello</code>可以看到redis内存储的数据信息<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203120044575.png"></p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>虽然这个起手式真的很简单，但是它打通了我们连接redis的第一步，后续我们将持续增加功能来对redis进行操作</p>
+    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过分组匹配，就可以很方便的使用.group(分组名称)，语义化的得到字符串内容，避免了大量split操作导致的理解困难，另外因为password分组使用了贪婪模式，所以可以兼容任意特殊字符串，避免了split时，特殊字符串导致的split未按预期拆分。</p>
 
                 
             </div>
@@ -555,7 +536,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dengwu.wang/2022/03/11/si-ke-redis-zhi-qi-shou-shi/">https://dengwu.wang/2022/03/11/si-ke-redis-zhi-qi-shou-shi/</a>
+                    <a href="https://dengwu.wang/2022/05/01/shi-yong-zheng-ze-fen-zu-pi-pei-zi-fu-chuan/">https://dengwu.wang/2022/05/01/shi-yong-zheng-ze-fen-zu-pi-pei-zi-fu-chuan/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -593,12 +574,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/redis/">
-                                    <span class="chip bg-color">redis</span>
-                                </a>
-                            
-                                <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
-                                    <span class="chip bg-color">分布式缓存</span>
+                                <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                                    <span class="chip bg-color">正则匹配</span>
                                 </a>
                             
                         </div>
@@ -782,17 +759,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/03/15/si-ke-redis-zhi-shu-ju-lei-xing/">
+                <a href="/2022/05/01/shi-yong-zheng-ze-fen-zu-pi-pei-zi-fu-chuan/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="死磕Redis之数据类型">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="使用正则分组匹配字符串">
                         
-                        <span class="card-title">死磕Redis之数据类型</span>
+                        <span class="card-title">使用正则分组匹配字符串</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -802,9 +780,59 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-15
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-01
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="post-category">
+                                    程序设计
+                                </a>
+                            
+                            
                         </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                        <span class="chip bg-color">正则匹配</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/04/21/redis-6-2-shi-yong-zi-qian-ming-tls-shi-xian-jia-mi-chuan-shu/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis 6.2 使用自签名tls实现加密传输">
+                        
+                        <span class="card-title">Redis 6.2 使用自签名tls实现加密传输</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-04-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -824,57 +852,8 @@
                         <span class="chip bg-color">redis</span>
                     </a>
                     
-                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
-                        <span class="chip bg-color">分布式缓存</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/03/10/java-threadlocal-tan-mi/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Java ThreadLocal探秘">
-                        
-                        <span class="card-title">Java ThreadLocal探秘</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-10
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Java/" class="post-category">
-                                    Java
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/ThreadLocal/">
-                        <span class="chip bg-color">ThreadLocal</span>
+                    <a href="/tags/tls/">
+                        <span class="chip bg-color">tls</span>
                     </a>
                     
                 </div>
