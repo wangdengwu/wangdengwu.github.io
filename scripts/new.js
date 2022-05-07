@@ -1,5 +1,5 @@
 var exec = require('child_process').exec
- 
-hexo.on('new', function(data){
-    exec('macdown ' + data.path)
+
+hexo.on('new', function (data) {
+  exec('code ' + data.path)
 })
