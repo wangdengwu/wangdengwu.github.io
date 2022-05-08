@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>翻译一本书</title>
+      <link href="/2022/05/08/fan-yi-yi-ben-shu/"/>
+      <url>/2022/05/08/fan-yi-yi-ben-shu/</url>
+      
+        <content type="html"><![CDATA[<h3 id="自己动手写解释器"><a href="#自己动手写解释器" class="headerlink" title="自己动手写解释器"></a>自己动手写解释器</h3><p>最近开始翻译一本书，书名叫《<a href="https://craftinginterpreters.com/">craftinginterpreters</a>》，翻译过来就叫《<a href="https://lox.dengwu.wang/">自己手动写解释器</a>》，作者花了6年时间写完，然后开源到GitHub，版权声明显示，书中的代码是MIT协议，但是电子书的样式和Markdown格式的内容是<a href="https://learnku.com/docs/guide/cc4.0/6589">CC BY-NC-ND 4.0协议</a>，看了下大概内容就是需要标明内容出处，不能进行商业行为，可以自由共享，所以进行中文翻译并分享是合法的。</p><h3 id="开源电子书技术栈"><a href="#开源电子书技术栈" class="headerlink" title="开源电子书技术栈"></a>开源电子书技术栈</h3><p>作者使用了HTML模板，并结合dart语言整合了Markdown的文字，然后页面样式使用了scss，整体上还是比较美观的，但是内容深度绑定模板，自己刚好对dart比较熟，魔改了一部分内容使之支持中文翻译，并在GitHub开源，后续打算以此为基础，开源一个和模板非深度绑定的电子书生成项目，这样自己后续的电子书也可以以此为模板进行创作了。</p><h3 id="自己动手系列书籍"><a href="#自己动手系列书籍" class="headerlink" title="自己动手系列书籍"></a>自己动手系列书籍</h3><p>后续打算以自己手动为开头，写一些书或者小册，先翻译完《自己动手写解释器》，然后想继续写《自己动手写JVM》，《自己动手写操作系统》，《自己动手写Docker》等等书籍。<br>加油！！！</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 电子书 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 翻译 - 电子书 - 编译原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>自定义condition注解</title>
       <link href="/2022/05/05/zi-ding-yi-condition-zhu-jie/"/>
       <url>/2022/05/05/zi-ding-yi-condition-zhu-jie/</url>
