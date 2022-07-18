@@ -12,7 +12,7 @@ tags:
 现在selenium4则提供了devTools交互，Chrome等浏览器自身携带了devTools，以方便开发者调试页面，比较常用的就是查看页面元素，以及查看对应的网络请求数据。
 浏览器自带的devTools如下所示
 
-![](https://cdn.jsdelivr.net/gh/wangdengwu/wangdengwu.github.io/source/_posts/assets/16352486276926.jpg)
+![](https://img.dengwu.wang/blog/16352486276926.jpg)
 
 ### selenium环境搭建
 我们以Chrome为例搭建selenium环境

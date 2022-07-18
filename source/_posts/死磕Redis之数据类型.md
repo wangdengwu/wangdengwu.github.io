@@ -19,14 +19,14 @@ Redis之所以很流行，除了作为集中式缓存之外，还因为其提供
 * Sorted Set
 
 而对应的底层数据结构则有
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181617189.png)
+![](https://img.dengwu.wang/blog/202203181617189.png)
 ### Redis的Key-Value存储结构
 我们知道Redis是通过Key来操作Value的，那Key-Value的对应关系又是怎么样的呢，如何快速通过key找到对应的value呢
-![图片来源-极客时间-Redis核心技术与实践](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203151254812.png)
+![图片来源-极客时间-Redis核心技术与实践](https://img.dengwu.wang/blog/202203151254812.png)
 既然是使用哈希表的方式，当KEY比较多的时候，必然会出现哈希冲突的情况，那如果有哈希冲突，redis是如何处理的呢。
-![图片来源-极客时间-Redis核心技术与实践](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203151518362.png)
+![图片来源-极客时间-Redis核心技术与实践](https://img.dengwu.wang/blog/202203151518362.png)
 首先使用链式哈希解决哈希冲突，但是如果链式长度过长，也会导致性能下降，则Redis会进行一次渐进式rehash操作。
-![图片来源-极客时间-Redis核心技术与实践](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181217176.png)
+![图片来源-极客时间-Redis核心技术与实践](https://img.dengwu.wang/blog/202203181217176.png)
 其实不止因为哈希冲突会扩充全局哈希表，随着Key的增多，容量不够时一样会进行扩充全局哈希表，我们来看下日志。
 首先修改日志级别为verbose和设置日志文件
 
@@ -63,7 +63,7 @@ logfile "/usr/local/etc/redis/redis.log"
 有些重复的日志我删掉了，可以看到初始化是4个slots，后续扩容都会翻倍。
 ### dictEntry
 全局哈希表里存储的具体对象是dictEntry，具体结构是什么样的呢？
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181350496.png)
+![](https://img.dengwu.wang/blog/202203181350496.png)
 以Set hello world指令举例，属性key即设置的hello，指向sds（Simple Dynamic String）类型
 属性val指向redisObject类型,而next即哈希冲突的拉链，指向下一个entry
 ### redisObject
@@ -115,7 +115,7 @@ encoding即底层存储数据结构，可以使用object encoding key来确定en
 "ziplist"
 ```
 具体每个type对应的encoding如下：
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181516759.png)
+![](https://img.dengwu.wang/blog/202203181516759.png)
 
 ### 字符串类型
 Redis没有使用c语言的字符串，而是自己写了一个，并且做了优化，会根据字符串的长度的不同使用不同的类型以减小内存占用。
@@ -124,11 +124,11 @@ Redis没有使用c语言的字符串，而是自己写了一个，并且做了�
 * alloc:分配的空间长度
 * flags:标识类型
 * buf[]:字符数组
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181424818.png)
+![](https://img.dengwu.wang/blog/202203181424818.png)
 在sdshdr5中将类型放到了flags的前3个字节中（3个字节能保存6种类型，所以3个字节足够了），后5个字节用来保存字符的长度。因为sdshdr5取消了alloc字段，因此也不会进行空间预分配
 当存储的val为数字类型时，则直接使用整数来保存这个字符串，也就是redisObject里的属性val，直接存数字，这也是type是int的由来。
 当字符串的长度小于等于44字节时，redisObject和sds一起分配内存。当字符串大于44字节时，才对redisObject分配一次内存，对sds分配一次内存
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181527532.png)
+![](https://img.dengwu.wang/blog/202203181527532.png)
 
 ##### 为什么以44字节为界限？
 
@@ -157,19 +157,19 @@ OK
 ### ziplist数据结构
 由于ziplist数据结构几乎在所有集合都用到了，需要先介绍一下ziplist
 压缩列表实际上类似于一个数组，数组中的每一个元素都对应保存一个数据。和数组不同的是，压缩列表在表头有三个字段 zlbytes、zltail 和 zllen，分别表示列表长度、列表尾的偏移量和列表中的 entry 个数；压缩列表在表尾还有一个 zlend，表示列表结束。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181539390.png)
+![](https://img.dengwu.wang/blog/202203181539390.png)
 
 ### List类型
 list类型现在是直接使用quicklist实现的
 quicklist是一个双向链表，链表中每个节点是一个ziplist
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181541836.png)
+![](https://img.dengwu.wang/blog/202203181541836.png)
 
 ### Hash类型
 元素比较少时用ziplist来存储，当元素比较多时用hash来存储
 元素比较少时
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181545270.png)
+![](https://img.dengwu.wang/blog/202203181545270.png)
 元素比较多时
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181545806.png)
+![](https://img.dengwu.wang/blog/202203181545806.png)
 
 ```
 127.0.0.1:6379> HSET hash hello world
@@ -184,9 +184,9 @@ quicklist是一个双向链表，链表中每个节点是一个ziplist
 ### Set类型
 当元素不多，且元素都为整数时，set的底层实现为intset，否则为dict
 intset
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181551344.png)
+![](https://img.dengwu.wang/blog/202203181551344.png)
 hashtable
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181552477.png)
+![](https://img.dengwu.wang/blog/202203181552477.png)
 ```
 127.0.0.1:6379> object encoding set
 "intset"
@@ -197,10 +197,10 @@ hashtable
 ```
 ### zset类型
 zset当元素较少时会使用ziplist来存储
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181557617.png)
+![](https://img.dengwu.wang/blog/202203181557617.png)
 zset当元素较多时使用dict+skiplist来存储
 dict保存了数据到分数的映射关系，skiplist用来根据分数查询数据
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203181559381.png)
+![](https://img.dengwu.wang/blog/202203181559381.png)
 
 ### 总结
 

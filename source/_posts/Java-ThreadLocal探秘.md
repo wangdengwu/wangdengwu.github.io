@@ -150,7 +150,7 @@ fun main() {
 ```
 嗯，kotlin就是那种，一旦你使用过，就爱上的那种。毕竟是我jetbrains出品,被Google认作亲儿子的语言
 好了，回到Java。。。。。。。，我得上图
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203101617305.png)
+![](https://img.dengwu.wang/blog/202203101617305.png)
 重点代码我都标了，也就是如果想父子线程传递，就需要使用inheritableThreadLocals而不是threadLocals
 那我们再看下InheritableThreadLocal类的代码
 
@@ -250,10 +250,10 @@ private void reflect(WeakReference<ThreadLocal> threadLocal) {
 解释一下，首先使用弱引用创建ThreadLocal，然后使用线程池启动16个线程，分别设置MemoryLeakBean，使用自定义的MemoryLeakBean是因为我们需要看下jvm内存的对象个数，而使用String,Long不容易看清楚。
 等待5秒开始gc，这样弱引用就会被释放，也就是ThreadLocal对象就没有了，然后我们线程里循环反射获取MemoryLeakBean对象。这个时候如果线程不释放，则MemoryLeakBean对象就一直存在，而线程池是一直存在的。我们看下执行结果
 
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203101643315.png)
+![](https://img.dengwu.wang/blog/202203101643315.png)
 可以看到ThreadLocal已经没有了，但是还是能获取到MemoryLeakBean
 我们使用jmap看下
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203101645895.png)
+![](https://img.dengwu.wang/blog/202203101645895.png)
 可以看到确实是有16个MemoryLeakBean对象还在。
 ### 总结
 ThreadLocal虽好，可不要贪杯哦。最后还是要安利一下kotlin

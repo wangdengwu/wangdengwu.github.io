@@ -75,7 +75,7 @@ Vue.createApp(App).mount('#app')
 ##### 新一代工程化工具 Vite
 Webpack采用预编译的方式，往往由于工程文件很多，导致打包时间要到分钟级别，严重影响开发体验，而Vite采用按需加载，可以大大缩短启动时间，开发期间几乎秒启动，按需加载。
 ## vue2要不要升级vue3
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211102164915.png)
+![](https://img.dengwu.wang/blog/20211102164915.png)
 ## 总结
 * 工程化工具 Vite 带来了更丝滑的调试体验。
 * 对于产品的最终效果来看，Vue 3 性能更高，体积更小。
@@ -84,4 +84,4 @@ Webpack采用预编译的方式，往往由于工程文件很多，导致打包�
 * Vue 3 内置了新的 Fragment、Teleport 和 Suspense 等组件。
 * 对于 Vue 的二次开发来说，自定义渲染器让我们开发跨端应用时更加得心应手。
 * 对于 Vue 的源码维护者，全部的模块使用 TypeScript 重构，能够带来更好的可维护性。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211102163240.png)
+![](https://img.dengwu.wang/blog/20211102163240.png)

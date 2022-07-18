@@ -246,7 +246,7 @@ s.b.string.StringBuilderBenchmark.plus                      ss   10  3489.946 ±
 
 也会输出json格式的报表文件，通过[可视化工具](https://jmh.morethan.io/)可以更直观的看到结果。
 
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205151306544.png)
+![](https://img.dengwu.wang/blog/202205151306544.png)
 
 通过测试结果来看，ThreadLocalRandom和Random的差距在100倍，差距还是非常大的。
 
@@ -342,7 +342,7 @@ public class BenchmarkProcessor extends AbstractProcessor {
 }
 ```
 
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205151336943.png)
+![](https://img.dengwu.wang/blog/202205151336943.png)
 
 #### fork进程
 
@@ -574,7 +574,7 @@ public class Father {
 
 在jmh-sample工程下执行，`mvn clean compile`即可在target/generated-sources目录下看到生成的类FatherChildren.java
 
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205152144698.png)
+![](https://img.dengwu.wang/blog/202205152144698.png)
 
 
 

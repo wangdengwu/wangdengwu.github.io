@@ -46,7 +46,7 @@ Echarts就不做过多介绍了，相信大家都听说或者使用过，现在�
   </script>
 ```
 渲染出来的效果就是这样的
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211112181806.png)
+![](https://img.dengwu.wang/blog/20211112181806.png)
 ### 代码分析
 echarts是依赖zrender来绘制的，上述代码可以看到调用了echarts的2个方法，**init**和**setOption**,5.x版本的echarts是使用typescript写的。
 先看下init方法的定义,在src/echarts.ts里,为了更简洁清晰，后续代码我删掉了非主干流程渲染的部分内容。
@@ -392,7 +392,7 @@ restorePipelines(ecModel: GlobalModel): void {
     }
 ```
 其中seriesModel的内容:
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211113135714.png)
+![](https://img.dengwu.wang/blog/20211113135714.png)
 
 ``` javascript
 private _pipe(seriesModel: SeriesModel, task: GeneralTask) {
@@ -617,7 +617,7 @@ renderComponents = (
     };
 ```
 ecIns就是echarts实例，那针对这个示例都有哪些_componentsViews呢，
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211114010528.png)
+![](https://img.dengwu.wang/blog/20211114010528.png)
 拿其中一个TitleView来细看一下
 
 ``` javascript
@@ -781,7 +781,7 @@ private _renderNormal(
 ```
 方法太长，我删掉了非主干代码，可以看到最终根据Model的data的diff来进行add,update,remove,最终还是调用了zrender的Rect来画出bar的样子。
 最后贴一下渲染BarView的调用栈
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211114021358.png)
+![](https://img.dengwu.wang/blog/20211114021358.png)
 渲染ComponentView比较直接，而渲染ChartView类型的就绕来绕去，主要原因是ChartView可能数据比较多，需要逐步分批渲染，以减少卡顿，保持每秒60帧的渲染，因为1000ms，每一帧不能超过16ms，才能保持流畅的渲染。
 在setOption方法的最后调用了`this._zr.flush();`则直接将绘制渲染出来了，当然对于ChartView的绘制，可能还需要等到下一次渲染的时候才会显示出来。
 

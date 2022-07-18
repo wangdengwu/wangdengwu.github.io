@@ -30,12 +30,12 @@ AOF可以配置写回策略，即频率和是否阻塞，通过配置appendfsync
 推荐使用everysec
 #### AOF日志过大怎么办？
 既然是追加，那难免日志会越来越大，日志过大会导致写性能越来越差，甚至导致磁盘不足等风险。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211549622.png)
+![](https://img.dengwu.wang/blog/202203211549622.png)
 AOF采用重写机制来优化日志，rewrite即将日志内容合并，因为可能同一个key在一段时间内反复被设置数据，其实只需要保持最新的数据指令即可，这样就可以使日志文件大大减少，但是即便是可以减少，恢复时如果一条一条执行指令，也是会比较慢的，虽然RDB会丢数据，但是恢复的时候却很快，那能不能结合2个的优点呢？
 4.0之后Redis对AOF进行了优化，重写时会先进行一次RDB，后续再追加指令。
 默认AOF文件是appendonly.aof，通过配置appendonly yes来启用，默认是no
 AOF内容如下：
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211553164.png)
+![](https://img.dengwu.wang/blog/202203211553164.png)
 *3代表有3个指令组成，每个指令通过$n标识，n就是指令长度，如Set是$3
 
 ### 总结

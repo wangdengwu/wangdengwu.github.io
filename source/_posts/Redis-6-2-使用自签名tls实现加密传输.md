@@ -88,7 +88,7 @@ X.509v3 Root CA Certificate (ECDSA P-256) [Serial: 2527...6639]
           to:  2032-04-18T04:45:52Z
 ```
 Mac的话，就可以在钥匙串访问里看到了
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202204212143947.png)
+![](https://img.dengwu.wang/blog/202204212143947.png)
 下面，我们就可以向根证书服务申请中间证书了。
 
 ``` bash
@@ -153,7 +153,7 @@ services:
       - master
 ```
 需要映射tls文件目录，以便redis启动的时候能找到证书，目录结构如下
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202204212151449.png)
+![](https://img.dengwu.wang/blog/202204212151449.png)
 我们现在可以使用docker-compose up -d来启动了，如果没啥意外的话，就启动成功了。
 下面，我们使用redis-cli来访问一下，由于证书是绑定域名的，如果我们直接访问127.0.0.1的话，是访问失败的，所以还需要修改一下hosts文件绑定域名`127.0.0.1 redis.dengwu.wang`
 绑定完后，我们来连接一下

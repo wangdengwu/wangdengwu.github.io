@@ -466,7 +466,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-05-15
+                    2022-07-18
                 </div>
                 
 
@@ -480,11 +480,6 @@
                 
 
                 
-                    <div id="busuanzi_container_page_pv" class="info-break-policy">
-                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
-                        <span id="busuanzi_value_page_pv"></span>
-                    </div>
-				
             </div>
         </div>
         <hr class="clearfix">
@@ -685,15 +680,15 @@
 <p>执行java -jar jmh-sample.jar即可开始执行基准测试。执行完成后，有概要统计输出：</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">Do not assume the numbers tell you what you want them to tell.
 Benchmark                                                 Mode  Cnt     Score     Error  Units
-s.b.random.RandomBenchmark.nextInt                        avgt    5   957.973 ± 263.841  ns&#x2F;op
-s.b.random.RandomBenchmark.nextIntWithThreadLocal         avgt    5     9.541 ±   1.324  ns&#x2F;op
-s.b.string.StringBuilderBenchmark.appendWithBuffer          ss   10    97.373 ±  15.152  ms&#x2F;op
-s.b.string.StringBuilderBenchmark.appendWithBuilder         ss   10    24.313 ±  18.410  ms&#x2F;op
-s.b.string.StringBuilderBenchmark.appendWithSynchronized    ss   10    69.081 ±  35.567  ms&#x2F;op
-s.b.string.StringBuilderBenchmark.plus                      ss   10  3489.946 ± 134.923  ms&#x2F;op<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+s.b.random.RandomBenchmark.nextInt                        avgt    <span class="token number">5</span>   <span class="token number">957.973</span> ± <span class="token number">263.841</span>  ns/op
+s.b.random.RandomBenchmark.nextIntWithThreadLocal         avgt    <span class="token number">5</span>     <span class="token number">9.541</span> ±   <span class="token number">1.324</span>  ns/op
+s.b.string.StringBuilderBenchmark.appendWithBuffer          ss   <span class="token number">10</span>    <span class="token number">97.373</span> ±  <span class="token number">15.152</span>  ms/op
+s.b.string.StringBuilderBenchmark.appendWithBuilder         ss   <span class="token number">10</span>    <span class="token number">24.313</span> ±  <span class="token number">18.410</span>  ms/op
+s.b.string.StringBuilderBenchmark.appendWithSynchronized    ss   <span class="token number">10</span>    <span class="token number">69.081</span> ±  <span class="token number">35.567</span>  ms/op
+s.b.string.StringBuilderBenchmark.plus                      ss   <span class="token number">10</span>  <span class="token number">3489.946</span> ± <span class="token number">134.923</span>  ms/op<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>也会输出json格式的报表文件，通过<a target="_blank" rel="noopener" href="https://jmh.morethan.io/">可视化工具</a>可以更直观的看到结果。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205151306544.png"></p>
+<p><img src="https://img.dengwu.wang/blog/202205151306544.png"></p>
 <p>通过测试结果来看，ThreadLocalRandom和Random的差距在100倍，差距还是非常大的。</p>
 <p>而字符串拼接这块，使用+来拼接，当数据量比较多的时候，性能非常差，而没有线程并发需求的情况下，StringBuilder性能最好，在并发情况下，使用<code>synchronized</code>同步StringBuilder比StringBuffer性能要好，因为</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -772,7 +767,7 @@ s.b.string.StringBuilderBenchmark.plus                      ss   10  3489.946 ±
 
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205151336943.png"></p>
+<p><img src="https://img.dengwu.wang/blog/202205151336943.png"></p>
 <h4 id="fork进程"><a href="#fork进程" class="headerlink" title="fork进程"></a>fork进程</h4><p>fork这块主要使用了Java的process功能，入口在<code>runBenchmarks</code>方法，</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">ActionPlan</span> r <span class="token operator">:</span> plan<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
   <span class="token class-name">Multimap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">BenchmarkParams</span><span class="token punctuation">,</span> <span class="token class-name">BenchmarkResult</span><span class="token punctuation">></span></span> res<span class="token punctuation">;</span>
@@ -972,7 +967,7 @@ s.b.string.StringBuilderBenchmark.plus                      ss   10  3489.946 ±
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>在jmh-sample工程下执行，<code>mvn clean compile</code>即可在target/generated-sources目录下看到生成的类FatherChildren.java</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205152144698.png"></p>
+<p><img src="https://img.dengwu.wang/blog/202205152144698.png"></p>
 
                 
             </div>
@@ -1288,7 +1283,7 @@ s.b.string.StringBuilderBenchmark.plus                      ss   10  3489.946 ±
                 <a href="/2022/05/08/fan-yi-yi-ben-shu/">
                     <div class="card-image">
                         
-                        <img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202205081651249.png" class="responsive-img" alt="翻译一本书">
+                        <img src="https://img.dengwu.wang/blog/202205081651249.png" class="responsive-img" alt="翻译一本书">
                         
                         <span class="card-title">翻译一本书</span>
                     </div>
@@ -1494,110 +1489,44 @@ s.b.string.StringBuilderBenchmark.plus                      ss   10  3489.946 ±
     
 
     <div class="container row center-align"
-         style="margin-bottom: 15px !important;">
+         style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
                 <span id="year">2021-2022</span>
             
-            <a href="/about" target="_blank">王登武</a>
+            <!-- <a href="/about" target="_blank">王登武</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
-            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
-            <br>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a> -->
+            <!-- <br> -->
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
                         class="white-color">31.6k</span>
             
             
             
-                
             
             
-                <span id="busuanzi_container_site_pv">
-                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
-                    <span id="busuanzi_value_site_pv" class="white-color"></span>
-            </span>
-            
-            
-                <span id="busuanzi_container_site_uv">
-                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
-                    <span id="busuanzi_value_site_uv" class="white-color"></span>
-            </span>
-            
-            <br>
+            <!-- <br> -->
 
             <!-- 运行天数提醒. -->
-            
-                <span id="sitetime"> Loading ...</span>
-                <script>
-                    var calcSiteTime = function () {
-                        var seconds = 1000;
-                        var minutes = seconds * 60;
-                        var hours = minutes * 60;
-                        var days = hours * 24;
-                        var years = days * 365;
-                        var today = new Date();
-                        var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "22";
-                        var startHour = "0";
-                        var startMinute = "0";
-                        var startSecond = "0";
-                        var todayYear = today.getFullYear();
-                        var todayMonth = today.getMonth() + 1;
-                        var todayDate = today.getDate();
-                        var todayHour = today.getHours();
-                        var todayMinute = today.getMinutes();
-                        var todaySecond = today.getSeconds();
-                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
-                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
-                        var diff = t2 - t1;
-                        var diffYears = Math.floor(diff / years);
-                        var diffDays = Math.floor((diff / days) - diffYears * 365);
-
-                        // 区分是否有年份.
-                        var language = 'zh-CN';
-                        if (startYear === String(todayYear)) {
-                            document.getElementById("year").innerHTML = todayYear;
-                            var daysTip = 'This site has been running for ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                daysTip = '本站已运行 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                daysTip = '本站已運行 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = daysTip;
-                        } else {
-                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
-                                + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
-                        }
-                    }
-
-                    calcSiteTime();
-                </script>
             
             <br>
             
                 <span id="icp"><img src="/medias/icp.png"
                                     style="vertical-align: text-bottom;"/>
-                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号-2</a>
+                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号</a>
             </span>
             
         </div>
-        <div class="col s12 m4 l4 social-link social-statis">
+        <div class="col s12 m4 l4 social-link ">
     <a href="https://github.com/wangdengwu" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
 
 
 
-    <a href="mailto:mailto@dengwu.wang" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+    <a href="mailto:me@dengwu.wang" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
         <i class="fas fa-envelope-open"></i>
     </a>
 
@@ -1776,8 +1705,6 @@ $(function () {
     
     <script src="/libs/others/clicklove.js" async="async"></script>
     
-    
-    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
 
     

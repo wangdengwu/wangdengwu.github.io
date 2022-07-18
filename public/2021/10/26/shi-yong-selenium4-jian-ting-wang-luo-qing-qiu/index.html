@@ -466,7 +466,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-28
+                    2022-07-18
                 </div>
                 
 
@@ -480,11 +480,6 @@
                 
 
                 
-                    <div id="busuanzi_container_page_pv" class="info-break-policy">
-                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
-                        <span id="busuanzi_value_page_pv"></span>
-                    </div>
-				
             </div>
         </div>
         <hr class="clearfix">
@@ -499,7 +494,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h3 id="selenium4支持devTools"><a href="#selenium4支持devTools" class="headerlink" title="selenium4支持devTools"></a>selenium4支持devTools</h3><p>以往selenium更多的是用来作为UI自动化工具，因为其可以编程获取页面元素，并交互，而爬取数据往往因为页面元素的展示，和实际网络请求并不一致导致只是通过页面无法获取到精确数据。<br>现在selenium4则提供了devTools交互，Chrome等浏览器自身携带了devTools，以方便开发者调试页面，比较常用的就是查看页面元素，以及查看对应的网络请求数据。<br>浏览器自带的devTools如下所示</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wangdengwu/wangdengwu.github.io/source/_posts/assets/16352486276926.jpg"></p>
+<p><img src="https://img.dengwu.wang/blog/16352486276926.jpg"></p>
 <h3 id="selenium环境搭建"><a href="#selenium环境搭建" class="headerlink" title="selenium环境搭建"></a>selenium环境搭建</h3><p>我们以Chrome为例搭建selenium环境<br>首先需要确定我们的Chrome浏览器的版本，如果你没有安装，则需要先安装Chrome浏览器，比如现在最新的Chrome浏览器版本为94.0.4606.81<br>另外下载对应版本的chromedriver,<a target="_blank" rel="noopener" href="http://npm.taobao.org/mirrors/chromedriver/">下载地址(taobao镜像)</a> 选择和Chrome版本一致的文件夹，并下载和自己操作系统一致的文件。<br>下载完成后，需要把chromedriver放到系统可执行路径下，比如Linux或Mac可以放到/usr/local/bin/<br>然后通过命令行启动Chrome，对于Windows可以在桌面Chrome应用的快捷方式添加启动参数。启动命令如下</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./Google<span class="token punctuation">\</span> Chrome --remote-debugging-port<span class="token operator">=</span><span class="token number">9222</span> --user-data-dir<span class="token operator">=</span><span class="token string">"/Users/xxxx/chrome2"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>其中最主要的2个参数是–remote-debugging-port和–user-data-dir</p>
@@ -1063,110 +1058,44 @@ driver<span class="token punctuation">.</span><span class="token function">findE
     
 
     <div class="container row center-align"
-         style="margin-bottom: 15px !important;">
+         style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
                 <span id="year">2021-2022</span>
             
-            <a href="/about" target="_blank">王登武</a>
+            <!-- <a href="/about" target="_blank">王登武</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
-            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
-            <br>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a> -->
+            <!-- <br> -->
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
                         class="white-color">31.6k</span>
             
             
             
-                
             
             
-                <span id="busuanzi_container_site_pv">
-                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
-                    <span id="busuanzi_value_site_pv" class="white-color"></span>
-            </span>
-            
-            
-                <span id="busuanzi_container_site_uv">
-                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
-                    <span id="busuanzi_value_site_uv" class="white-color"></span>
-            </span>
-            
-            <br>
+            <!-- <br> -->
 
             <!-- 运行天数提醒. -->
-            
-                <span id="sitetime"> Loading ...</span>
-                <script>
-                    var calcSiteTime = function () {
-                        var seconds = 1000;
-                        var minutes = seconds * 60;
-                        var hours = minutes * 60;
-                        var days = hours * 24;
-                        var years = days * 365;
-                        var today = new Date();
-                        var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "22";
-                        var startHour = "0";
-                        var startMinute = "0";
-                        var startSecond = "0";
-                        var todayYear = today.getFullYear();
-                        var todayMonth = today.getMonth() + 1;
-                        var todayDate = today.getDate();
-                        var todayHour = today.getHours();
-                        var todayMinute = today.getMinutes();
-                        var todaySecond = today.getSeconds();
-                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
-                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
-                        var diff = t2 - t1;
-                        var diffYears = Math.floor(diff / years);
-                        var diffDays = Math.floor((diff / days) - diffYears * 365);
-
-                        // 区分是否有年份.
-                        var language = 'zh-CN';
-                        if (startYear === String(todayYear)) {
-                            document.getElementById("year").innerHTML = todayYear;
-                            var daysTip = 'This site has been running for ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                daysTip = '本站已运行 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                daysTip = '本站已運行 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = daysTip;
-                        } else {
-                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
-                                + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
-                        }
-                    }
-
-                    calcSiteTime();
-                </script>
             
             <br>
             
                 <span id="icp"><img src="/medias/icp.png"
                                     style="vertical-align: text-bottom;"/>
-                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号-2</a>
+                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号</a>
             </span>
             
         </div>
-        <div class="col s12 m4 l4 social-link social-statis">
+        <div class="col s12 m4 l4 social-link ">
     <a href="https://github.com/wangdengwu" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
 
 
 
-    <a href="mailto:mailto@dengwu.wang" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+    <a href="mailto:me@dengwu.wang" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
         <i class="fas fa-envelope-open"></i>
     </a>
 
@@ -1345,8 +1274,6 @@ $(function () {
     
     <script src="/libs/others/clicklove.js" async="async"></script>
     
-    
-    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
 
     

@@ -40,6 +40,6 @@ docker run -i -t ubuntu /bin/bash
 我们安装docker桌面版，因为有图形化界面，可以更直观
 安装地址为[docker桌面版](https://docs.docker.com/desktop/),选择自己对应的操作系统，比如Windows还是Mac
 具体安装步骤就不详细说明了，Windows需要注意开启主板的虚拟设置，Mac需要选择Intel芯片还是M1芯片的安装文件。
-安装完界面如下：![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211101164658.png)
+安装完界面如下：![](https://img.dengwu.wang/blog/20211101164658.png)
 
 后续一些需要分享开发环境的，都将采用docker的镜像分享，以方便快速统一环境。

@@ -71,7 +71,7 @@ class HikariDaoImpl(
 ```
 直接操作jdbc，需要通过DriverManager获取数据库连接，然后通过Statement执行SQL，拿到ResultSet，手动getXXX获取数据并组装成对象，这里使用了kotlin的use来自动close，通过示例可以看到如果手动操作，非常繁琐，需要关心很多和业务无关的操作，而spring jdbc以及ORM框架则把这些繁琐的操作都封装了起来，使我们只需要关注具体的SQL和对象。
 这里还有一个小知识点，就是SPI，在JDBC4.0之前，需要使用`Class.forName(driverClassName)`来加载驱动，而JDBC4.0之后只需要厂商在驱动包里配置一下即可
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211201182322.png)
+![](https://img.dengwu.wang/blog/20211201182322.png)
 原理是通过`val loader = ServiceLoader.load(Driver::class.java)`即可加载到实现。
 
 ### 为什么需要数据库连接池
@@ -81,7 +81,7 @@ class HikariDaoImpl(
 ### 数据库连接池原理
 在系统初始化的时候，在内存中开辟一片空间，将一定数量的数据库连接作为对象存储在对象池里，并对外提供数据库连接的获取和归还方法。用户访问数据库时，并不是建立一个新的连接，而是从数据库连接池中取出一个已有的空闲连接对象；使用完毕归还后的连接也不会马上被关闭，而是由数据库连接池统一管理回收，为下一次借用做好准备。如果由于高并发请求导致数据库连接池中的连接被借用完毕，其他线程就会等待，直到有连接被归还。整个过程中，连接并不会被关闭，而是源源不断地循环使用，有借有还。数据库连接池还可以通过设置其参数来控制连接池中的初始连接数、连接的上下限数，以及每个连接的最大使用次数、最大空闲时间等，也可以通过其自身的管理机制来监视数据库连接的数量、使用情况等。
 ### 数据库连接池组成
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/数据库连接池.jpg)
+![](https://img.dengwu.wang/blog/数据库连接池.jpg)
 ### 配置项
 由于spring boot 2.x开始数据库连接池已经默认是HikariCP了，所以我们只需要进行配置即可，那都有哪些配置项需要配置呢，又有哪些需要注意的地方呢？
 #### 默认是怎么生效的
@@ -118,7 +118,7 @@ class HikariDaoImpl(
 </dependencies>
 ```	
 可以看到jdbc依赖了HikariCP，并且版本是4.0.3最新版本。了解spring boot starter机制的应该知道，除了pom依赖，还需要有autoconfig
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211202154126.png)
+![](https://img.dengwu.wang/blog/20211202154126.png)
 
 ``` java
 @Configuration(proxyBeanMethods = false)
@@ -240,14 +240,14 @@ class HikariDaoImpl(
 ```
 因为连接池是懒加载的，我们先访问一下/slow,验证一下不加表锁的情况下可以正常执行并初始化连接池。
 再通过jconsole看下连接池的情况。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206151609.png)
+![](https://img.dengwu.wang/blog/20211206151609.png)
 可以看到空闲连接1个，现在，我们把hikari_person表加上写锁，来模拟慢查询。
 `LOCK TABLES hikari_person WRITE;`  再访问/slow,直接卡住没有返回。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206152032.png)
+![](https://img.dengwu.wang/blog/20211206152032.png)
 可以看到活跃连接1个，已经没有空闲的了，这个时候我们访问/hikari
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206152151.png)
+![](https://img.dengwu.wang/blog/20211206152151.png)
 变成了1个活跃，1个等待，并且30秒报了超时异常。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206152344.png)
+![](https://img.dengwu.wang/blog/20211206152344.png)
 可以看到，确实配置可以生效，当连接池已满，再有请求就会被阻塞等待，然后超时。
 记得执行`UNLOCK TABLES;`释放表锁。释放完后，原来等待返回的/slow直接返回了结果0。
 ### 数据源的初始化
@@ -265,7 +265,7 @@ HikariDataSource dataSource(DataSourceProperties properties) {
 }
 ```
 再看一下HikariDataSource的类图
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211206165729.png)
+![](https://img.dengwu.wang/blog/20211206165729.png)
 
 由于HikariDataSource继承自HikariConfig，并且`@ConfigurationProperties(prefix = "spring.datasource.hikari")`所以我们在application.properties里配置的属性，就初始化到了DataSource里。
 ### HikariDataSource的获取连接
@@ -311,7 +311,7 @@ public Connection getConnection() throws SQLException
 HikariDataSource的getConnection方法，有个额外知识点，就是单例模式，HikariPool是单例的，使用了双重检测锁来完成单例操作。
 获取连接之前，需要先进行连接池的初始化new HikariPool(this)。
 ### 连接池的初始化
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/初始化连接池.jpg)
+![](https://img.dengwu.wang/blog/初始化连接池.jpg)
 
 connectionBag是连接池的并发数据结构，做了并发优化，后面再详细说明。
 houseKeeper是保持连接池数量的线程池，核心数量为1，使用了ScheduledThreadPoolExecutor，默认30秒运行一次。
@@ -322,7 +322,7 @@ houseKeeper是保持连接池数量的线程池，核心数量为1，使用了Sc
 leakTaskFactory用于检测是否有连接泄漏，getConnection之后要及时close掉，如果没有及时close则会有泄漏。通过getConnection时延迟执行ProxyLeakTask，延迟最小值2秒，低于此值则默认不进行连接泄漏检测，如果在该时间内没有及时close，则该延迟任务将会执行，而在close方法里，对该任务进行了cancel，及时close就不会触发ProxyLeakTask。默认是0不执行连接泄漏检测，可以通过spring.datasource.hikari.leakDetectionThreshold=3000设置来启用。
 到此连接池就初始化完了。
 ### 获取连接
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/获取连接.jpg)
+![](https://img.dengwu.wang/blog/获取连接.jpg)
 核心代码
 
 ``` java
@@ -386,10 +386,10 @@ void closeConnection(final PoolEntry poolEntry, final String closureReason)
 `return poolEntry.createProxyConnection(leakTaskFactory.schedule(poolEntry), now);`
 这块代码就是创建leakTask检测链接泄漏的同时，创建ProxyConnection返回。
 ### 归还连接
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112081615450.jpg)
+![](https://img.dengwu.wang/blog/202112081615450.jpg)
 由于之前获取的连接并不是真正JDBC的Connect驱动实现，而是代理实现，所以调用对应的close方法只是归还连接，而不是真正关闭物理连接，这样就实现了借用连接池的链接，在close的时候归还连接，以便后续使用。
 我们通过打断点，也可以看到对应的对象都是代理过的对象。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/20211208154917.png)
+![](https://img.dengwu.wang/blog/20211208154917.png)
 ### 静态代理
 由于需要对原生JDBC对象进行增强，所以HikariCP采用了代理技术，但是考虑性能问题，其没有使用JDK的动态代理，而是使用了字节码增强的伪动态代理，因为其字节码增强是在编译的时候增强的，使用了javassist来做字节码增强。
 涉及到的类有，ProxyFactory，JavassistProxyFactory以及抽象类：ProxyCallableStatement，ProxyConnection，ProxyDatabaseMetaData，ProxyPreparedStatement，ProxyResultSet，ProxyStatement。
@@ -486,13 +486,13 @@ public ResultSet executeQuery(String string) throws SQLException {
 }
 ```
 反编译后虽然不太正常，但是真实增强代码确实已经添加进去了，我们执行一下看看。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091150526.png)
+![](https://img.dengwu.wang/blog/202112091150526.png)
 确实打印了出来。
 ### Hikari为什么这么快
 因为Hikari代码比较精简，并且在细节上下了很大功夫，除了使用静态字节码增强来优化性能之前，其在并发性能上也下了功夫，具体就是对并发数据结构的创建和使用。
 #### ConnectionBag
 ConnectionBag可以说是hikari的核心，所有连接的创建，获取，归还，释放等等都和其息息相关，先来看下类结构。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091846818.png)
+![](https://img.dengwu.wang/blog/202112091846818.png)
 最核心的几个方法是add,borrow,requite,remove。ConnectionBag内部使用了ThreadLocal和SynchronousQueue，CopyOnWriteArrayList以及waiters:AtomicInteger来保证并发安全以及快速获取连接。
 #### borrow
 
@@ -627,8 +627,8 @@ public boolean remove(final T bagEntry)
 </dependency>
 ```
 启动项目，通过http://localhost:8080/actuator/ 访问
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091918834.png)
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202112091918768.png)
+![](https://img.dengwu.wang/blog/202112091918834.png)
+![](https://img.dengwu.wang/blog/202112091918768.png)
 通过集成Prometheus以及Grafana则可以收集并图形化展示监控数据，这里就不做过多介绍了。
 ### 总结
 hikari虽然代码比较少，但是麻雀虽小五脏俱全，涉及到很多知识点

@@ -21,10 +21,10 @@ Redis作为集中式缓存（也支持分布式架构），不管是单体应用
 随着可以掌握大部分功能，就可以深入其原理和架构，了解其设计和思想是什么样的，这个时候就对其整体有了认知。
 当有了全局和思想的掌握后，就可以深入细节，阅读源码则更能由表入里，完全掌握这项技术或中间件。
 当然这三个部分是互相循环的，互为助推，随着熟练使用，就接触到一部分原理和架构，然后可能也会看一部分源码， 继而更有助于熟练使用，也能更理解原理和架构。就像下面这张图一样。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203111725715.jpg)
+![](https://img.dengwu.wang/blog/202203111725715.jpg)
 ### 死磕Redis系列大纲
 大概计划了一个大纲
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203111728829.png)
+![](https://img.dengwu.wang/blog/202203111728829.png)
 如果能写完死磕Redis系列，效果还不错的话，可能还会有《死磕Netty》《死磕Kotlin》《死磕Java并发》等等系列吧。
 ### 死磕Redis之起手式
 那么我们就正式进入死磕Redis系列的起手式。
@@ -36,12 +36,12 @@ Redis作为集中式缓存（也支持分布式架构），不管是单体应用
 然后我们去DockerHub搜一下[Redis](https://hub.docker.com/_/redis?tab=tags)的镜像，点击链接即可跳转过去，Redis的版本很多，我们暂时选最新稳定版6.2.6。
 启动Redis实例`docker run --name redis -p 127.0.0.1:6379:6379 -d redis:6.2.6`，运行`docker ps`就可以看到运行中的redis实例了。
 如果本地没有安装redis，没有redis-cli工具，则可以使用`docker exec -it redis redis-cli`连到容器的redis，执行info命令就可以看到redis服务的信息了。
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112301578.png)
+![](https://img.dengwu.wang/blog/202203112301578.png)
 ### spring boot连接Redis
 我们首先可以使用https://start.spring.io/创建一个骨架程序
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112315606.png)
+![](https://img.dengwu.wang/blog/202203112315606.png)
 点击生成下载到本地后，使用IntelliJ打开
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203112352611.png)
+![](https://img.dengwu.wang/blog/202203112352611.png)
 如果你按照上述步骤来动手实践的话，我希望你在demo文件夹下使用git init来初始化代码仓库，以方便对代码进行版本管理。
 ### HelloRedis
 我们需要添加一些代码，设置Redis相关的配置，来执行HelloRedis的操作。
@@ -90,6 +90,6 @@ public class HelloRedisController {
 然后在浏览器里输入http://127.0.0.1:8080/redis/hello?name=redis
 这样就将redis字符串存到了redis里，再执行http://127.0.0.1:8080/redis/hello，就可以看到hello redis了
 也可以使用命令`docker exec -it redis redis-cli`连接到redis，执行`keys *`以及`get hello`和`type hello`可以看到redis内存储的数据信息
-![](https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203120044575.png)
+![](https://img.dengwu.wang/blog/202203120044575.png)
 ### 结尾
 虽然这个起手式真的很简单，但是它打通了我们连接redis的第一步，后续我们将持续增加功能来对redis进行操作
