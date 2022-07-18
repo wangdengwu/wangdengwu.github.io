@@ -467,7 +467,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-21
+                    2022-07-18
                 </div>
                 
 
@@ -481,11 +481,6 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
                 
 
                 
-                    <div id="busuanzi_container_page_pv" class="info-break-policy">
-                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
-                        <span id="busuanzi_value_page_pv"></span>
-                    </div>
-				
             </div>
         </div>
         <hr class="clearfix">
@@ -509,7 +504,7 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
 <li>no： 操作系统控制，写执行执行完毕，把日志写到 AOF 文件内存缓冲区，由操作系统决定何时刷写到磁盘。</li>
 </ul>
 <p>推荐使用everysec</p>
-<h4 id="AOF日志过大怎么办？"><a href="#AOF日志过大怎么办？" class="headerlink" title="AOF日志过大怎么办？"></a>AOF日志过大怎么办？</h4><p>既然是追加，那难免日志会越来越大，日志过大会导致写性能越来越差，甚至导致磁盘不足等风险。<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211549622.png"><br>AOF采用重写机制来优化日志，rewrite即将日志内容合并，因为可能同一个key在一段时间内反复被设置数据，其实只需要保持最新的数据指令即可，这样就可以使日志文件大大减少，但是即便是可以减少，恢复时如果一条一条执行指令，也是会比较慢的，虽然RDB会丢数据，但是恢复的时候却很快，那能不能结合2个的优点呢？<br>4.0之后Redis对AOF进行了优化，重写时会先进行一次RDB，后续再追加指令。<br>默认AOF文件是appendonly.aof，通过配置appendonly yes来启用，默认是no<br>AOF内容如下：<br><img src="https://cdn.jsdelivr.net/gh/wangdengwu/imagehosting/202203211553164.png"><br>*3代表有3个指令组成，每个指令通过$n标识，n就是指令长度，如Set是$3</p>
+<h4 id="AOF日志过大怎么办？"><a href="#AOF日志过大怎么办？" class="headerlink" title="AOF日志过大怎么办？"></a>AOF日志过大怎么办？</h4><p>既然是追加，那难免日志会越来越大，日志过大会导致写性能越来越差，甚至导致磁盘不足等风险。<br><img src="https://img.dengwu.wang/blog/202203211549622.png"><br>AOF采用重写机制来优化日志，rewrite即将日志内容合并，因为可能同一个key在一段时间内反复被设置数据，其实只需要保持最新的数据指令即可，这样就可以使日志文件大大减少，但是即便是可以减少，恢复时如果一条一条执行指令，也是会比较慢的，虽然RDB会丢数据，但是恢复的时候却很快，那能不能结合2个的优点呢？<br>4.0之后Redis对AOF进行了优化，重写时会先进行一次RDB，后续再追加指令。<br>默认AOF文件是appendonly.aof，通过配置appendonly yes来启用，默认是no<br>AOF内容如下：<br><img src="https://img.dengwu.wang/blog/202203211553164.png"><br>*3代表有3个指令组成，每个指令通过$n标识，n就是指令长度，如Set是$3</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>不建议使用RDB，会存在分钟级数据丢失<br>建议使用AOF，4.0以后还进行了优化，策略使用默认everysec即可。</p>
 
                 
@@ -1035,110 +1030,44 @@ RDBRDB真的懒得介绍，因为很不实用，如果只使用RDB，恢复时�
     
 
     <div class="container row center-align"
-         style="margin-bottom: 15px !important;">
+         style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
                 <span id="year">2021-2022</span>
             
-            <a href="/about" target="_blank">王登武</a>
+            <!-- <a href="/about" target="_blank">王登武</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
-            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
-            <br>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a> -->
+            <!-- <br> -->
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
                         class="white-color">31.6k</span>
             
             
             
-                
             
             
-                <span id="busuanzi_container_site_pv">
-                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
-                    <span id="busuanzi_value_site_pv" class="white-color"></span>
-            </span>
-            
-            
-                <span id="busuanzi_container_site_uv">
-                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
-                    <span id="busuanzi_value_site_uv" class="white-color"></span>
-            </span>
-            
-            <br>
+            <!-- <br> -->
 
             <!-- 运行天数提醒. -->
-            
-                <span id="sitetime"> Loading ...</span>
-                <script>
-                    var calcSiteTime = function () {
-                        var seconds = 1000;
-                        var minutes = seconds * 60;
-                        var hours = minutes * 60;
-                        var days = hours * 24;
-                        var years = days * 365;
-                        var today = new Date();
-                        var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "22";
-                        var startHour = "0";
-                        var startMinute = "0";
-                        var startSecond = "0";
-                        var todayYear = today.getFullYear();
-                        var todayMonth = today.getMonth() + 1;
-                        var todayDate = today.getDate();
-                        var todayHour = today.getHours();
-                        var todayMinute = today.getMinutes();
-                        var todaySecond = today.getSeconds();
-                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
-                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
-                        var diff = t2 - t1;
-                        var diffYears = Math.floor(diff / years);
-                        var diffDays = Math.floor((diff / days) - diffYears * 365);
-
-                        // 区分是否有年份.
-                        var language = 'zh-CN';
-                        if (startYear === String(todayYear)) {
-                            document.getElementById("year").innerHTML = todayYear;
-                            var daysTip = 'This site has been running for ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                daysTip = '本站已运行 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                daysTip = '本站已運行 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = daysTip;
-                        } else {
-                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
-                                + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
-                        }
-                    }
-
-                    calcSiteTime();
-                </script>
             
             <br>
             
                 <span id="icp"><img src="/medias/icp.png"
                                     style="vertical-align: text-bottom;"/>
-                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号-2</a>
+                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号</a>
             </span>
             
         </div>
-        <div class="col s12 m4 l4 social-link social-statis">
+        <div class="col s12 m4 l4 social-link ">
     <a href="https://github.com/wangdengwu" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
 
 
 
-    <a href="mailto:mailto@dengwu.wang" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+    <a href="mailto:me@dengwu.wang" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
         <i class="fas fa-envelope-open"></i>
     </a>
 
@@ -1317,8 +1246,6 @@ $(function () {
     
     <script src="/libs/others/clicklove.js" async="async"></script>
     
-    
-    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
 
     
