@@ -601,7 +601,7 @@
                 type: 'pie',
                 radius: '50%',
                 color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [{"name":"测试","value":1},{"name":"Java","value":5},{"name":"程序设计","value":2},{"name":"docker","value":1},{"name":"vue","value":1},{"name":"前端","value":1},{"name":"函数式编程","value":1},{"name":"死磕Redis","value":4},{"name":"电子书","value":1}],
+                data: [{"name":"死磕Redis","value":4},{"name":"docker","value":1},{"name":"Java","value":5},{"name":"vue","value":1},{"name":"前端","value":1},{"name":"测试","value":1},{"name":"程序设计","value":2},{"name":"函数式编程","value":1},{"name":"电子书","value":1}],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -625,7 +625,7 @@
         xAxis: [
             {
                 type: 'category',
-                data: ["redis","分布式缓存","selenium","UI自动化","spring gateway","Java","DDD","领域驱动","docker","vue3"]
+                data: ["redis","分布式缓存","tls","docker","ThreadLocal","vue3","图表 - echarts","基线测试","jmh","selenium"]
             }
         ],
         yAxis: [
@@ -808,40 +808,26 @@
         <div class="tag-chips center-align">
             
             
-            <a href="/tags/selenium/">
-                <span class="chip center-align waves-effect waves-light chip-default">selenium</span>
+            <a href="/tags/redis/">
+                <span class="chip center-align waves-effect waves-light chip-default">redis</span>
             </a>
             
             
             
-            <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
-                <span class="chip center-align waves-effect waves-light chip-default">UI自动化</span>
-            </a>
-            
-            
-            
-            <a href="/tags/spring-gateway/">
-                <span class="chip center-align waves-effect waves-light chip-default">spring gateway</span>
-            </a>
-            
-            
-            
-            
-            
-            <a href="/tags/DDD/">
-                <span class="chip center-align waves-effect waves-light chip-default">DDD</span>
-            </a>
-            
-            
-            
-            <a href="/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/">
-                <span class="chip center-align waves-effect waves-light chip-default">领域驱动</span>
+            <a href="/tags/tls/">
+                <span class="chip center-align waves-effect waves-light chip-default">tls</span>
             </a>
             
             
             
             <a href="/tags/docker/">
                 <span class="chip center-align waves-effect waves-light chip-default">docker</span>
+            </a>
+            
+            
+            
+            <a href="/tags/ThreadLocal/">
+                <span class="chip center-align waves-effect waves-light chip-default">ThreadLocal</span>
             </a>
             
             
@@ -858,8 +844,76 @@
             
             
             
+            <a href="/tags/%E5%9F%BA%E7%BA%BF%E6%B5%8B%E8%AF%95/">
+                <span class="chip center-align waves-effect waves-light chip-default">基线测试</span>
+            </a>
+            
+            
+            
+            <a href="/tags/jmh/">
+                <span class="chip center-align waves-effect waves-light chip-default">jmh</span>
+            </a>
+            
+            
+            
+            <a href="/tags/selenium/">
+                <span class="chip center-align waves-effect waves-light chip-default">selenium</span>
+            </a>
+            
+            
+            
+            <a href="/tags/UI%E8%87%AA%E5%8A%A8%E5%8C%96/">
+                <span class="chip center-align waves-effect waves-light chip-default">UI自动化</span>
+            </a>
+            
+            
+            
+            <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                <span class="chip center-align waves-effect waves-light chip-default">正则匹配</span>
+            </a>
+            
+            
+            
             <a href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/">
                 <span class="chip center-align waves-effect waves-light chip-default">函数式编程</span>
+            </a>
+            
+            
+            
+            <a href="/tags/spring-gateway/">
+                <span class="chip center-align waves-effect waves-light chip-default">spring gateway</span>
+            </a>
+            
+            
+            
+            
+            
+            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+                <span class="chip center-align waves-effect waves-light chip-default">分布式缓存</span>
+            </a>
+            
+            
+            
+            <a href="/tags/%E7%BF%BB%E8%AF%91-%E7%94%B5%E5%AD%90%E4%B9%A6-%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">
+                <span class="chip center-align waves-effect waves-light chip-default">翻译 - 电子书 - 编译原理</span>
+            </a>
+            
+            
+            
+            <a href="/tags/Spring-Boot/">
+                <span class="chip center-align waves-effect waves-light chip-default">Spring Boot</span>
+            </a>
+            
+            
+            
+            <a href="/tags/DDD/">
+                <span class="chip center-align waves-effect waves-light chip-default">DDD</span>
+            </a>
+            
+            
+            
+            <a href="/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/">
+                <span class="chip center-align waves-effect waves-light chip-default">领域驱动</span>
             </a>
             
             
@@ -872,60 +926,6 @@
             
             <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/">
                 <span class="chip center-align waves-effect waves-light chip-default">数据库连接池</span>
-            </a>
-            
-            
-            
-            <a href="/tags/ThreadLocal/">
-                <span class="chip center-align waves-effect waves-light chip-default">ThreadLocal</span>
-            </a>
-            
-            
-            
-            <a href="/tags/redis/">
-                <span class="chip center-align waves-effect waves-light chip-default">redis</span>
-            </a>
-            
-            
-            
-            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
-                <span class="chip center-align waves-effect waves-light chip-default">分布式缓存</span>
-            </a>
-            
-            
-            
-            <a href="/tags/tls/">
-                <span class="chip center-align waves-effect waves-light chip-default">tls</span>
-            </a>
-            
-            
-            
-            <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
-                <span class="chip center-align waves-effect waves-light chip-default">正则匹配</span>
-            </a>
-            
-            
-            
-            <a href="/tags/Spring-Boot/">
-                <span class="chip center-align waves-effect waves-light chip-default">Spring Boot</span>
-            </a>
-            
-            
-            
-            <a href="/tags/%E7%BF%BB%E8%AF%91-%E7%94%B5%E5%AD%90%E4%B9%A6-%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">
-                <span class="chip center-align waves-effect waves-light chip-default">翻译 - 电子书 - 编译原理</span>
-            </a>
-            
-            
-            
-            <a href="/tags/%E5%9F%BA%E7%BA%BF%E6%B5%8B%E8%AF%95/">
-                <span class="chip center-align waves-effect waves-light chip-default">基线测试</span>
-            </a>
-            
-            
-            
-            <a href="/tags/jmh/">
-                <span class="chip center-align waves-effect waves-light chip-default">jmh</span>
             </a>
             
             
@@ -977,7 +977,7 @@
             
                 <span id="icp"><img src="/medias/icp.png"
                                     style="vertical-align: text-bottom;"/>
-                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号</a>
+                <a href="https://beian.miit.gov.cn/" target="_blank">陕ICP备2021012627号-2</a>
             </span>
             
         </div>
